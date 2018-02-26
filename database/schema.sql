@@ -76,9 +76,15 @@ CREATE TABLE Auction (
     bidIncrement DECIMAL(8,2) NOT NULL,
     description LONGTEXT,
     auctioneer VARCHAR(255) NOT NULL,
+    inSubcategory VARCHAR(255),
+    inCategory VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (auctioneer)
         REFERENCES Account (username)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (inSubcategory, inCategory)
+        REFERENCES ItemSubcategory (name, category)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
