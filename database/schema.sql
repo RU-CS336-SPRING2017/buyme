@@ -2,6 +2,8 @@ DROP DATABASE IF EXISTS BuyMe;
 CREATE DATABASE BuyMe;
 USE BuyMe;
 
+-- Represents an account that can either be an
+-- admin, customer rep, or user.
 CREATE TABLE Account (
     username VARCHAR(255),
     password VARCHAR(255) NOT NULL,
@@ -9,6 +11,9 @@ CREATE TABLE Account (
     PRIMARY KEY (username)
 );
 
+-- Represents a message that can be sent from
+-- one account to another. If any of the accounts
+-- get deleted, the message remains.
 CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     subject VARCHAR(255),
@@ -27,11 +32,13 @@ CREATE TABLE Message (
         ON UPDATE CASCADE
 );
 
+-- Represents a category of items that can be auctioned.
 CREATE TABLE ItemCategory (
     name VARCHAR(255),
     PRIMARY KEY (name)
 );
 
+-- Represents a subcategory of a category.
 CREATE TABLE ItemSubcategory (
     name VARCHAR(255),
     category VARCHAR(255),
@@ -42,6 +49,7 @@ CREATE TABLE ItemSubcategory (
         ON UPDATE CASCADE
 );
 
+-- Represents a required field of a category.
 CREATE TABLE CategoryField (
     name VARCHAR(255),
     value VARCHAR(255),
@@ -53,6 +61,7 @@ CREATE TABLE CategoryField (
         ON UPDATE CASCADE
 );
 
+-- Relates fields that should be exclusive to a subcategory.
 CREATE TABLE fieldOfSubcategory (
     field VARCHAR(255),
     category VARCHAR(255),
@@ -68,6 +77,9 @@ CREATE TABLE fieldOfSubcategory (
         ON UPDATE CASCADE
 );
 
+-- Represents an auction that must comply with a
+-- subcategory, and must have an auctioneer. Each
+-- auction has a unique ID.
 CREATE TABLE Auction (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     openTime DATETIME NOT NULL,
@@ -89,6 +101,8 @@ CREATE TABLE Auction (
         ON UPDATE CASCADE
 );
 
+-- Represent a bid that is identified by the
+-- amount, bidder, and auction.
 CREATE TABLE Bid (
     dateTime DATETIME NOT NULL,
     amount DECIMAL(8,2),
