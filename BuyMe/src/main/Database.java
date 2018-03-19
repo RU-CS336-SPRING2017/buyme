@@ -1,14 +1,17 @@
 package main;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Database {
+import javax.servlet.http.HttpServletResponse;
 
-	public static boolean loggedIn;
-	public static String username;
+public class Database {
+	
+	// If username is null, user is not authenticated
+	private static String username = null;
 
 	public Database() throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
@@ -18,7 +21,7 @@ public class Database {
 	 * Creates a connection to the database
 	 */
 	private Connection connect() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://" + Macros.BASE_HREF + "?serverTimezone=UTC&useSSL=false",
+		return DriverManager.getConnection("jdbc:mysql://" + Macros.MYSQL_HOST + "?serverTimezone=UTC&useSSL=false",
 				Macros.MYSQL_USER, Macros.MYSQL_PASS);
 	}
 
@@ -42,9 +45,8 @@ public class Database {
 	/**
 	 * Verifies if credentials are valid
 	 */
-	public boolean verifyUser(String username, String password) throws SQLException {
+	public void logIn(String username, String password, HttpServletResponse response) throws SQLException, IOException {
 
-		boolean ret;
 		Connection con = this.connect();
 		ResultSet rs = con.createStatement()
 				.executeQuery("SELECT password FROM BuyMe.Account WHERE username='" + username + "';");
@@ -52,16 +54,26 @@ public class Database {
 		if (rs.first()) {
 			String pass = rs.getString("password");
 			if (pass.equals(password)) {
-				ret = true;
-			} else {
-				ret = false;
+				Database.username = username;	
 			}
-
-		} else {
-			ret = false;
 		}
 
 		con.close();
-		return ret;
+		response.sendRedirect(Macros.BASE_HREF);
+	}
+	
+	/**
+	 * Returns true if logged in
+	 */
+	public static boolean isLoggedIn() {
+		return Database.username != null;
+	}
+	
+	/**
+	 * Logs the user out. Sets username to null, and redirects to home.
+	 */
+	public static void logOut(HttpServletResponse response) throws IOException {
+		Database.username = null;
+		response.sendRedirect(Macros.BASE_HREF);
 	}
 }
