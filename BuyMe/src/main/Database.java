@@ -6,10 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
-	
+
 	public static boolean loggedIn;
 	public static String username;
-	
+
 	public Database() throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
 	}
@@ -18,8 +18,8 @@ public class Database {
 	 * Creates a connection to the database
 	 */
 	private Connection connect() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://localhost?serverTimezone=UTC&useSSL=false", "root",
-				"password");
+		return DriverManager.getConnection("jdbc:mysql://" + Macros.BASE_HREF + "?serverTimezone=UTC&useSSL=false",
+				Macros.MYSQL_USER, Macros.MYSQL_PASS);
 	}
 
 	/**
