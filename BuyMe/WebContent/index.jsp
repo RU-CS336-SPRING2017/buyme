@@ -1,11 +1,14 @@
 <html>
-
+<head>
+<title>BuyMe</title>
+</head>
 <body>
-	<form action="" method="post">
-		<input type="text" name="username"></input>
-		<input type="text" name="password"></input>
-		<input type="submit"></input>
+	<h1>BuyMe</h1>
+	<form action="login/" method="post">
+		Username: <input required type="text" name="username"> <br>
+		Password: <input required type="password" name="password"> <br>
+		<input type="submit" value="Login"> <input type="button"
+			value="Register">
 	</form>
 </body>
-
 </html>
