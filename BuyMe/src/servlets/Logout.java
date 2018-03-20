@@ -18,6 +18,6 @@ public class Logout extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.logout();
-		response.sendRedirect("login.jsp");
+		response.sendRedirect("index.jsp");
 	}
 }

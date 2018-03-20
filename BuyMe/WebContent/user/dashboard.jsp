@@ -4,12 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Invalid Credentials</title>
+<title>User Dashboard</title>
 </head>
 <body>
-<h2>Invalid credentials.</h2>
-<a href="../index.jsp">
-<input type="button" value="Go home">
+
+<h2>This is your (soon to be) dashboard</h2>
+<a href="../logout">
+<input type="button" value="logout">
 </a>
 </body>
 </html>

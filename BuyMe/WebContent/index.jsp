@@ -4,12 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Invalid Credentials</title>
+<title>BuyMe</title>
 </head>
 <body>
-<h2>Invalid credentials.</h2>
-<a href="../index.jsp">
-<input type="button" value="Go home">
-</a>
+
+<h1>BuyMe</h1>
+<ul>
+<li><a href="user/dashboard.jsp">Goto dashboard</a></li>
+</ul>
+
 </body>
 </html>
