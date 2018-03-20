@@ -10,8 +10,9 @@
 	<form action="j_security_check" method="post">
 		Username: <input required type="text" name="j_username"> <br>
 		Password: <input required type="password" name="j_password"> <br>
-		<input type="submit" value="Login"> <input type="button"
-			value="Register">
+		<input type="submit" value="Login"> <a href="../register.jsp">
+			<input type="button" value="Register">
+		</a>
 	</form>
 </body>
 </html>
