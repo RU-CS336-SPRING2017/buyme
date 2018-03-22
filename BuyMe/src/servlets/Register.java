@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import main.Database;
 
 /**
- * Servlet implementation class Register
+ * Registers a new user using POST parameters: username and password
  */
 @WebServlet("/register")
 public class Register extends HttpServlet {
@@ -36,10 +36,12 @@ public class Register extends HttpServlet {
 			String password = request.getParameter("password");
 			Database db = new Database();
 			
-			db.createUser(username, password);
-			
-			response.sendRedirect("/BuyMe");
-			
+			if (db.userExists(username)) {
+				response.sendRedirect("/buyme/registration-error.jsp");
+			} else {
+				db.createUser(username, password);
+				response.sendRedirect("/buyme/registration-success.jsp");
+			}
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			response.sendError(500, e.getMessage());

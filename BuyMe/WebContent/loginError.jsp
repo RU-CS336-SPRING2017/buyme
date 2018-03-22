@@ -8,8 +8,7 @@
 </head>
 <body>
 <h2>Invalid credentials.</h2>
-<a href="../index.jsp">
-<input type="button" value="Go home">
-</a>
+	<a href="/buyme/"> <input type="button" value="Go home">
+	</a>
 </body>
 </html>
