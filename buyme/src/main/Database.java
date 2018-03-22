@@ -2,6 +2,7 @@ package main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
@@ -40,7 +41,8 @@ public class Database {
 	 */
 	public boolean userExists(String username) throws SQLException {
 		Connection con = this.connect();
-		boolean ret = con.createStatement().execute("SELECT * FROM Account WHERE username='" + username + "';");
+		ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Account WHERE username='" + username + "';");
+		boolean ret = rs.first();
 		con.close();
 		return ret;
 	}
