@@ -1,0 +1,15 @@
+.metadata
+.recommenders
+RemoteSystemsTempFiles
+Servers
+buyme/.classpath
+buyme/.project
+buyme/.settings
+buyme/build
+buyme/WebContent/META-INF
+buyme/WebContent/WEB-INF/lib
+buyme.war
+apache-tomcat-9.0.6/*
+!apache-tomcat-9.0.6/conf
+apache-tomcat-9.0.6/conf/*
+!apache-tomcat-9.0.6/conf/server.xml
