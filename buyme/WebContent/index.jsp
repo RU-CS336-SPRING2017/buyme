@@ -9,9 +9,6 @@
 <body>
 
 <h1>BuyMe</h1>
-<ul>
-<li><a href="/buyme/user/dashboard.jsp">Goto dashboard</a></li>
-</ul>
-
+<jsp:include page="WEB-INF/includes/navbar.jsp"></jsp:include>
 </body>
 </html>
