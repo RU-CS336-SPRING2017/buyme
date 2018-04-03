@@ -7,8 +7,7 @@
 <title>BuyMe</title>
 </head>
 <body>
-
-<h1>BuyMe</h1>
 <jsp:include page="WEB-INF/includes/navbar.jsp"></jsp:include>
+<p>This is home!</p>
 </body>
 </html>
