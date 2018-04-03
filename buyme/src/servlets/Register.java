@@ -29,22 +29,14 @@ public class Register extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		try {
-			
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			Database db = new Database();
-			
-			if (db.userExists(username)) {
-				response.sendRedirect("/buyme/registration-error.jsp");
-			} else {
-				db.createUser(username, password);
-				response.sendRedirect("/buyme/registration-success.jsp");
-			}
-			
+			db.createUser(username, password);
+			response.sendRedirect("/buyme/registration-success.jsp");
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendError(500, e.getMessage());
+			response.sendRedirect("/buyme/registration-error.jsp");
 		}
 	}
 
