@@ -14,7 +14,7 @@ public class Database {
 	/**
 	 * Creates a connection to the database
 	 */
-	private Connection connect() throws SQLException {
+	public Connection connect() throws SQLException {
 		return DriverManager.getConnection("jdbc:mysql://crib.qwezey.com/BuyMe?serverTimezone=UTC&useSSL=false", "root",
 				"password");
 	}
@@ -25,11 +25,18 @@ public class Database {
 	public void createUser(String username, String password) throws SQLException {
 		this.createAccount(username, password, "user");
 	}
+	
+	/**
+	 * Creates a customer representative account
+	 */
+	public void createCustomerRep(String username, String password) throws SQLException {
+		this.createAccount(username, password, "customerRep");
+	}
 
 	/**
 	 * Creates an account
 	 */
-	public void createAccount(String username, String password, String type) throws SQLException {
+	private void createAccount(String username, String password, String type) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO Account (username, password, type) VALUES ('" + username + "', '"
 				+ password + "', '" + type + "');");
@@ -37,13 +44,11 @@ public class Database {
 	}
 	
 	/**
-	 * Returns true if username exists in the database
+	 * Deletes the specified account
 	 */
-	public boolean userExists(String username) throws SQLException {
+	public void removeAccount(String username) throws SQLException {
 		Connection con = this.connect();
-		ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Account WHERE username='" + username + "';");
-		boolean ret = rs.first();
+		con.createStatement().execute("DELETE FROM Account WHERE username='" + username + "';");
 		con.close();
-		return ret;
 	}
 }
