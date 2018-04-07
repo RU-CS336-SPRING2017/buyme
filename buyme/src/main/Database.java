@@ -51,4 +51,13 @@ public class Database {
 		con.createStatement().execute("DELETE FROM Account WHERE username='" + username + "';");
 		con.close();
 	}
+	
+	/**
+	 * Adds a category
+	 */
+	public void addCategory(String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO ItemCategory (name) VALUES ('" + category + "');");
+		con.close();
+	}
 }
