@@ -66,4 +66,16 @@ public class Database {
 		con.createStatement().execute("INSERT INTO CategoryField (name, category) VALUES ('" + field + "', '" + category + "');");
 		con.close();
 	}
+	
+	public void addSubcategory(String subcategory, String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO ItemSubcategory (name, category) VALUES ('" + subcategory + "', '" + category + "');");
+		con.close();
+	}
+	
+	public void addSubcategoryField(String field, String subcategory, String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO CategoryField (name, category, subcategory) VALUES ('" + field + "', '" + category + "', '" + subcategory + "');");
+		con.close();
+	}
 }

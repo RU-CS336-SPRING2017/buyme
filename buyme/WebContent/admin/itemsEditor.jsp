@@ -12,7 +12,12 @@
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-
+<%
+Database db = new Database();
+Connection con = db.connect();
+String category = request.getParameter("category");
+String subcategory = request.getParameter("subcategory");
+if (category == null) {%>
 <h3>Categories</h3>
 
 <form action="/buyme/admin/AddCategory" method="post">
@@ -24,8 +29,6 @@ Error adding category: <%=request.getParameter("addError")%><br>
 </form>
 
 <%
-Database db = new Database();
-Connection con = db.connect();
 ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory;");
 %>
 
@@ -36,15 +39,15 @@ ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory
 <%}%>
 </ul>
 
-<%
-String category = request.getParameter("category");
-if (category != null) {%>
+<%} else if (category != null && subcategory == null) {%>
 
-<h3>Fields for category: <%=category%></h3>
+<h3><a href="/buyme/admin/itemsEditor.jsp">Categories</a>/<%=category%></h3>
+
+<h4>Fields</h4>
 
 <form action="/buyme/admin/AddCategoryField" method="post">
 <%if(request.getParameter("fieldAddError") != null) { %>
-Error adding category field: <%=request.getParameter("fieldAddError")%><br>
+Error adding field: <%=request.getParameter("fieldAddError")%><br>
 <%}%>
 	Field: <input required type="text" name="field"> <br>
 	<input type="hidden" value="<%=category%>" name="category">
@@ -52,7 +55,56 @@ Error adding category field: <%=request.getParameter("fieldAddError")%><br>
 </form>
 
 <%
-rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "';");
+ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' and subcategory IS NULL;");
+%>
+
+<ul>
+<%while(rs.next()) {%>
+<%String name =  rs.getString("name");%>
+<li><%=name%></li>
+<%}%>
+</ul>
+
+<h4>Subcategories</h4>
+
+<form action="/buyme/admin/AddSubcategory" method="post">
+<%if(request.getParameter("subcategoryAddError") != null) { %>
+Error adding subcategory: <%=request.getParameter("subcategoryAddError")%><br>
+<%}%>
+	Subcategory: <input required type="text" name="subcategory"> <br>
+	<input type="hidden" value="<%=category%>" name="category">
+	<input type="submit" value="Add subcategory">
+</form>
+
+<%
+rs = con.createStatement().executeQuery("SELECT name FROM ItemSubcategory WHERE category='" + category + "';");
+%>
+
+<ul>
+<%while(rs.next()) {%>
+<%String name =  rs.getString("name");%>
+<li><a href="/buyme/admin/itemsEditor.jsp?category=<%=category%>&subcategory=<%=name%>"><%=name%></a></li>
+<%}%>
+</ul>
+
+<%} else {%>
+
+<h3><a href="/buyme/admin/itemsEditor.jsp">Categories</a>/<a href="/buyme/admin/itemsEditor.jsp?category=<%=category%>"><%=category%></a>/<%=subcategory%></h3>
+
+<h4>Fields</h4>
+
+<form action="/buyme/admin/AddSubategoryField" method="post">
+<%if(request.getParameter("subcategoryFieldAddError") != null) { %>
+Error adding field: <%=request.getParameter("subcategoryFieldAddError")%><br>
+<%}%>
+	Field: <input required type="text" name="field"> <br>
+	<input type="hidden" value="<%=category%>" name="category">
+	<input type="hidden" value="<%=subcategory%>" name="subcategory">
+	<input type="submit" value="Add field">
+</form>
+
+<%
+ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND subcategory='" + subcategory + "';");
 %>
 
 <ul>
@@ -63,8 +115,6 @@ rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE ca
 </ul>
 
 <%}
-
-con.close();
-%>
+con.close();%>
 </body>
 </html>

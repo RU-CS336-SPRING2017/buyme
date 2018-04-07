@@ -11,23 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import main.Database;
 
-@WebServlet("/admin/AddCategoryField")
-public class AddCategoryField extends HttpServlet {
+@WebServlet("/admin/AddSubategoryField")
+public class AddSubategoryField extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    public AddCategoryField() {
+    public AddSubategoryField() {
         super();
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String category = request.getParameter("category");
+		String subcategory = request.getParameter("subcategory");
 		String field = request.getParameter("field");
 		try {
 			Database db = new Database();
-			db.addCategoryField(field, category);
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category);
+			db.addSubcategoryField(field, subcategory, category);
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&subcategory=" + subcategory);
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&fieldAddError=" + field);
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&subcategory=" + subcategory + "&subcategoryFieldAddError=" + field);
 		}
 	}
 
