@@ -113,3 +113,20 @@ CREATE TABLE Bid (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+-- Represent an automatic bid that is identified by the
+-- max amount, bidder, and auction.
+CREATE TABLE AutoBid (
+    max DECIMAL(8,2),
+    bidder VARCHAR(255),
+    auction BIGINT UNSIGNED,
+    PRIMARY KEY (max, bidder, auction),
+    FOREIGN KEY (bidder)
+        REFERENCES Account (username)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (auction)
+        REFERENCES Auction (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
