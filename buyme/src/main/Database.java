@@ -60,4 +60,10 @@ public class Database {
 		con.createStatement().execute("INSERT INTO ItemCategory (name) VALUES ('" + category + "');");
 		con.close();
 	}
+	
+	public void addCategoryField(String field, String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO CategoryField (name, category) VALUES ('" + field + "', '" + category + "');");
+		con.close();
+	}
 }

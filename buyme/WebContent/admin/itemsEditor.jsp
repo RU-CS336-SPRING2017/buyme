@@ -11,11 +11,7 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
-<%
-Database db = new Database();
-Connection con = db.connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory;");
-%>
+
 
 <h3>Categories</h3>
 
@@ -24,16 +20,20 @@ ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory
 Error adding category: <%=request.getParameter("addError")%><br>
 <%}%>
 	Category: <input required type="text" name="category"> <br>
-	<input type="submit" value="Add Category">
+	<input type="submit" value="Add category">
 </form>
+
+<%
+Database db = new Database();
+Connection con = db.connect();
+ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory;");
+%>
 
 <ul>
 <%while(rs.next()) {%>
 <%String name =  rs.getString("name");%>
 <li><a href="/buyme/admin/itemsEditor.jsp?category=<%=name%>"><%=name%></a></li>
-<%}
-con.close();
-%>
+<%}%>
 </ul>
 
 <%
@@ -42,6 +42,29 @@ if (category != null) {%>
 
 <h3>Fields for category: <%=category%></h3>
 
+<form action="/buyme/admin/AddCategoryField" method="post">
+<%if(request.getParameter("fieldAddError") != null) { %>
+Error adding category field: <%=request.getParameter("fieldAddError")%><br>
 <%}%>
+	Field: <input required type="text" name="field"> <br>
+	<input type="hidden" value="<%=category%>" name="category">
+	<input type="submit" value="Add field">
+</form>
+
+<%
+rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "';");
+%>
+
+<ul>
+<%while(rs.next()) {%>
+<%String name =  rs.getString("name");%>
+<li><%=name%></li>
+<%}%>
+</ul>
+
+<%}
+
+con.close();
+%>
 </body>
 </html>
