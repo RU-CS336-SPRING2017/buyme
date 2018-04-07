@@ -49,25 +49,18 @@ CREATE TABLE ItemSubcategory (
         ON UPDATE CASCADE
 );
 
--- Represents a required field of a category.
+-- Represents a required field of a category or subcategory.
 CREATE TABLE CategoryField (
     name VARCHAR(255),
     category VARCHAR(255),
+    subcategory VARCHAR(255),
     PRIMARY KEY (name, category),
     FOREIGN KEY (category)
         REFERENCES ItemCategory (name)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
--- Represents a required field of a subcategory.
-CREATE TABLE SubcategoryField (
-    name VARCHAR(255),
-    category VARCHAR(255),
-    subcategory VARCHAR(255),
-    PRIMARY KEY (name, category, subcategory),
-    FOREIGN KEY (subcategory, category)
-        REFERENCES ItemSubcategory (name, category)
+        ON UPDATE CASCADE,
+    FOREIGN KEY (subcategory)
+        REFERENCES ItemSubcategory (name)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
