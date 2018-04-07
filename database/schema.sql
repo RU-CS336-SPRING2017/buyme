@@ -52,7 +52,6 @@ CREATE TABLE ItemSubcategory (
 -- Represents a required field of a category.
 CREATE TABLE CategoryField (
     name VARCHAR(255),
-    value VARCHAR(255),
     category VARCHAR(255),
     PRIMARY KEY (name, category),
     FOREIGN KEY (category)
@@ -61,16 +60,12 @@ CREATE TABLE CategoryField (
         ON UPDATE CASCADE
 );
 
--- Relates fields that should be exclusive to a subcategory.
-CREATE TABLE fieldOfSubcategory (
-    field VARCHAR(255),
+-- Represents a required field of a subcategory.
+CREATE TABLE SubcategoryField (
+    name VARCHAR(255),
     category VARCHAR(255),
     subcategory VARCHAR(255),
-    PRIMARY KEY (field, subcategory, category),
-    FOREIGN KEY (field, category)
-        REFERENCES CategoryField (name, category)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
+    PRIMARY KEY (name, category, subcategory),
     FOREIGN KEY (subcategory, category)
         REFERENCES ItemSubcategory (name, category)
         ON DELETE CASCADE
