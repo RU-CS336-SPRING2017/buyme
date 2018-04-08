@@ -9,6 +9,13 @@
 <body>
 
 	<h1>Register</h1>
+	
+	<%
+	String error = request.getParameter("registrationError");
+	if (error != null) {%>
+	<p>Error registering <%=error%>, try again</p>
+	<%}%>
+	
 	<form action="/buyme/register" method="post">
 		Username: <input required type="text" name="username"> <br>
 		Password: <input required type="password" name="password"> <br>
