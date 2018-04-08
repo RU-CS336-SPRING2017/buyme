@@ -144,7 +144,7 @@ if (category == null) {%>
 	<ul>
 	<%while(rs.next()) {%>
 	<%String name =  rs.getString("name");%>
-	<li><%=name%></li> <a href="/buyme/admin/RemoveSubcategoryField?category=<%=category%>&subcategory=<%=subcategory%>>&field=<%=name%>"><input type="button" value="Delete"></a>
+	<li><%=name%></li> <a href="/buyme/admin/RemoveSubcategoryField?category=<%=category%>&subcategory=<%=subcategory%>&field=<%=name%>"><input type="button" value="Delete"></a>
 	<%}%>
 	</ul>
 

@@ -27,7 +27,7 @@ public class RemoveCategoryField extends HttpServlet {
 			db.removeField(category, field);
 			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category);
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "'&fieldRemoveError=" + field);
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&fieldRemoveError=" + field);
 		}
 	}
 

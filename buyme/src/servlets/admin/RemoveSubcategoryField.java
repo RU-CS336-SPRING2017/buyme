@@ -25,10 +25,10 @@ public class RemoveSubcategoryField extends HttpServlet {
 		String field = request.getParameter("field");
 		try {
 			Database db = new Database();
-			db.removeSubcategory(subcategory, category);
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "subcategory='" + subcategory);
+			db.removeField(category, field);
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&subcategory=" + subcategory);
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "subcategory='" + subcategory + "'&fieldRemoveError=" + field);
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&subcategory=" + subcategory + "&fieldRemoveError=" + field);
 		}
 	}
 

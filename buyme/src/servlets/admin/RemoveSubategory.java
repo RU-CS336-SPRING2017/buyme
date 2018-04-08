@@ -28,7 +28,7 @@ public class RemoveSubategory extends HttpServlet {
 			db.removeSubcategory(subcategory, category);
 			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category);
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "subcategory='" + subcategory + "'&subcategoryRemoveError=true");
+			response.sendRedirect("/buyme/admin/itemsEditor.jsp?category=" + category + "&subcategory=" + subcategory + "&subcategoryRemoveError=true");
 		}
 	}
 }
