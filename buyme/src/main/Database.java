@@ -61,6 +61,12 @@ public class Database {
 		con.close();
 	}
 	
+	public void removeCategory(String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("DELETE FROM ItemCategory WHERE name='" + category + "';");
+		con.close();
+	}
+	
 	public void addCategoryField(String field, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO CategoryField (name, category) VALUES ('" + field + "', '" + category + "');");
@@ -73,9 +79,21 @@ public class Database {
 		con.close();
 	}
 	
+	public void removeSubcategory(String subcategory, String category) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("DELETE FROM ItemSubcategory WHERE name='" + subcategory + "' AND category='" + category + "';");
+		con.close();
+	}
+	
 	public void addSubcategoryField(String field, String subcategory, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO CategoryField (name, category, subcategory) VALUES ('" + field + "', '" + category + "', '" + subcategory + "');");
+		con.close();
+	}
+	
+	public void removeField(String category, String field) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("DELETE FROM CategoryField WHERE category='" + category + "' AND name='" + field + "';");
 		con.close();
 	}
 }
