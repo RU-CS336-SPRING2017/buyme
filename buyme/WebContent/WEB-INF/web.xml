@@ -13,6 +13,13 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 	<security-constraint>
+		<display-name>AllowRegistration</display-name>
+		<web-resource-collection>
+			<web-resource-name>RegistrationResource</web-resource-name>
+			<url-pattern>/register.jsp</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	<security-constraint>
 		<display-name>AllPagesConstraint</display-name>
 		<web-resource-collection>
 			<web-resource-name>WebResource</web-resource-name>
