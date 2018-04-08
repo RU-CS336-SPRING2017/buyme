@@ -6,8 +6,8 @@
 <li><a href="/buyme/admin/itemsEditor.jsp">Items Editor</a></li>
 <%}%>
 
-<%if (request.isUserInRole("user")) {%>
-<li><a href="/buyme/user/dashboard.jsp">Dashboard</a></li>
+<%if (request.isUserInRole("user") || request.isUserInRole("customerRep")) {%>
+<li><a href="/buyme/6/auctions.jsp">Auctions</a></li>
 <%}%>
 
 
