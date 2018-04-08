@@ -89,6 +89,22 @@ CREATE TABLE Auction (
         ON UPDATE CASCADE
 );
 
+-- Holds data for required fields in auctions.
+CREATE TABLE AuctionField (
+    auction BIGINT UNSIGNED,
+    field VARCHAR(255),
+    category VARCHAR(255),
+    PRIMARY KEY (auction, field, category),
+    FOREIGN KEY (auction)
+        REFERENCES Auction (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (field, category)
+        REFERENCES CategoryField (name, category)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 -- Represent a bid that is identified by the
 -- amount, bidder, and auction.
 CREATE TABLE Bid (
