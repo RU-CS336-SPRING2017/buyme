@@ -111,7 +111,7 @@ if (category == null) {%>
 	<h4>Inherited Fields</h4>
 	
 	<%
-	ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' and subcategory IS NULL;");
+	ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND subcategory IS NULL;");
 	%>
 	
 	<ul>
