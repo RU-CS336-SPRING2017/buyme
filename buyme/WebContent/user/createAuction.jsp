@@ -52,8 +52,10 @@ if (category == null) {%>
 
 	<form action="/buyme/user/CreateAuction" method="post">
 		
-		<input type="hidden" value="<%=category%>" name="category">
-		<input type="hidden" value="<%=subcategory%>" name="subcategory"><%
+		<label>Initial Price: <input name="initialPrice" type="number"></label><br>
+		<label>Bid Increment: <input name="bidIncrement" type="number"></label><br>
+		<label>Minimum Price: <input name="minimumPrice" type="number"></label><br>
+		<label>Close Time: <input name="closeTime" type="datetime-local"></label><br><%
 		
 		Database db = new Database();
 		Connection con = db.connect();
@@ -62,11 +64,13 @@ if (category == null) {%>
 		while (rs.next()) {
 		
 			String field = rs.getString("name");%>
-			<label><%=field%> <input required type="text" name="<%=field%>"></label><br><%
+			<label><%=field%>: <input required type="text" name="<%=field%>"></label><br><%
 		}%>
 		
 		<label>Description: <textarea name="description"></textarea></label> <br>
 		
+		<input type="hidden" value="<%=category%>" name="category">
+		<input type="hidden" value="<%=subcategory%>" name="subcategory">
 		<input type="submit" value="Create">
 	
 	</form><%
