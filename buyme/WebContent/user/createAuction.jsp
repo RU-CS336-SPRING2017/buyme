@@ -53,9 +53,19 @@ if (category == null) {%>
 	<form action="/buyme/user/CreateAuction" method="post">
 		
 		<input type="hidden" value="<%=category%>" name="category">
-		<input type="hidden" value="<%=subcategory%>" name="subcategory">
+		<input type="hidden" value="<%=subcategory%>" name="subcategory"><%
 		
-		<label>Description: <textarea rows="20" cols="50" name="description"></textarea></label> <br>
+		Database db = new Database();
+		Connection con = db.connect();
+		ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
+		
+		while (rs.next()) {
+		
+			String field = rs.getString("name");%>
+			<label><%=field%> <input required type="text" name="<%=field%>"></label><br><%
+		}%>
+		
+		<label>Description: <textarea name="description"></textarea></label> <br>
 		
 		<input type="submit" value="Create">
 	
