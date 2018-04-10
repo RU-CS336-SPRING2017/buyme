@@ -95,6 +95,7 @@ CREATE TABLE AuctionField (
     auction BIGINT UNSIGNED,
     field VARCHAR(255),
     category VARCHAR(255),
+    value VARCHAR(255),
     PRIMARY KEY (auction, field, category),
     FOREIGN KEY (auction)
         REFERENCES Auction (id)
