@@ -69,18 +69,18 @@ public class CreateAuction extends HttpServlet {
 				String fieldValue = request.getParameter(fieldName);
 				
 				createAuction += 
-						"INSERT INTO AuctionField (auction, field, category, value); \n" +
+						"INSERT INTO AuctionField (auction, field, category, value) \n" +
 						"VALUES (LAST_INSERT_ID(), '" + fieldName + "', '" + category + "', '" + fieldValue + "'); \n";
 			}
 			
 			createAuction += "COMMIT;";
-			
+			System.out.println(createAuction);
 			con.createStatement().execute(createAuction);
 			con.close();
 			System.out.println("Worked!");
 			
 		} catch (ClassNotFoundException | SQLException e) {
-			System.out.println("Didnt!" + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
