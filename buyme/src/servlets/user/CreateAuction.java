@@ -42,6 +42,7 @@ public class CreateAuction extends HttpServlet {
 		String bidIncrement = request.getParameter("bidIncrement");
 		String minimumPrice = request.getParameter("minimumPrice");
 		String closeTime = request.getParameter("closeTime");
+		String auctioneer = request.getUserPrincipal().getName();
 //		
 //		Enumeration<String> parameters = request.getParameterNames();
 //		
@@ -57,16 +58,29 @@ public class CreateAuction extends HttpServlet {
 			Connection con = db.connect();
 			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
 			
+			String createAuction =
+					"START TRANSACTION; \n" + 
+					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, auctioneer, subcategory, category) \n" +
+					"VALUES ('2018-03-03T10:24', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + auctioneer + "', '" + subcategory + "', '" + category + "'); \n";
+			
 			while (rs.next()) {
 				
 				String fieldName = rs.getString("name");
 				String fieldValue = request.getParameter(fieldName);
 				
-				System.out.println(fieldName + ": " + fieldValue);
+				createAuction += 
+						"INSERT INTO AuctionField (auction, field, category, value); \n" +
+						"VALUES (LAST_INSERT_ID(), '" + fieldName + "', '" + category + "', '" + fieldValue + "'); \n";
 			}
 			
+			createAuction += "COMMIT;";
+			
+			con.createStatement().execute(createAuction);
+			con.close();
+			System.out.println("Worked!");
+			
 		} catch (ClassNotFoundException | SQLException e) {
-
+			System.out.println("Didnt!" + e.getMessage());
 		}
 	}
 
