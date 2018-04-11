@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,17 +38,15 @@ public class CreateAuction extends HttpServlet {
 			
 			Database db = new Database();
 			con = db.connect();
-			
 			con.setAutoCommit(false);
 			con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
-			
-			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
-			
 			con.createStatement().execute(
 					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, auctioneer, subcategory, category) \n" +
-					"VALUES ('2018-03-03T10:24', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + auctioneer + "', '" + subcategory + "', '" + category + "');"
+					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + auctioneer + "', '" + subcategory + "', '" + category + "');"
 			);
+			
+			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
 			
 			while (rs.next()) {
 				
@@ -62,14 +62,7 @@ public class CreateAuction extends HttpServlet {
 			con.commit();
 			
 		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			try {
-				if (con != null) { con.rollback(); }
-			} catch (SQLException e1) {}
-		} finally {
-			try {
-				if (con != null) { con.close(); }
-			} catch (SQLException e) {}
-		}
+			try { if (con != null) { con.rollback(); } } catch (SQLException e1) {}
+		} finally { try { if (con != null) { con.close(); } } catch (SQLException e) {} }
 	}
 }
