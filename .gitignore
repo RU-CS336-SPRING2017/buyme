@@ -13,3 +13,6 @@ apache-tomcat-9.0.6/*
 !apache-tomcat-9.0.6/conf
 apache-tomcat-9.0.6/conf/*
 !apache-tomcat-9.0.6/conf/server.xml
+!apache-tomcat-9.0.6/lib
+apache-tomcat-9.0.6/lib/*
+!apache-tomcat-9.0.6/lib/mysql-5.1.46-connector_goes_here
