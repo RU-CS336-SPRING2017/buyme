@@ -30,7 +30,7 @@ public class CreateAuction extends HttpServlet {
 		String closeTime = request.getParameter("closeTime");
 		String auctioneer = request.getUserPrincipal().getName();
 		
-		Connection con;
+		Connection con = null;
 		
 		try {
 			
@@ -60,10 +60,16 @@ public class CreateAuction extends HttpServlet {
 			}
 			
 			con.commit();
-			con.close();
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
+			try {
+				if (con != null) { con.rollback(); }
+			} catch (SQLException e1) {}
+		} finally {
+			try {
+				if (con != null) { con.close(); }
+			} catch (SQLException e) {}
 		}
 	}
 }
