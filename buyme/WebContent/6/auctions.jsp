@@ -17,10 +17,10 @@
 <a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a>
 
 <table>
-<tr>
-<th>Item</th>
-<th>Auctioneer</th>
-</tr>
+	<tr>
+		<th>Item</th>
+		<th>Auctioneer</th>
+	</tr>
 
 <%
 Database db = new Database();
@@ -33,13 +33,13 @@ while (rs.next()) {
 	String auctioneer = rs.getString("auctioneer");
 %>
 
-<tr>
-<td><%=category%> / <%=subcategory%></td>
-<td><%=auctioneer%></td>
-</tr>
-</table>
+	<tr>
+		<td><%=category%> / <%=subcategory%></td>
+		<td><%=auctioneer%></td>
+	</tr><%
+}%>
 
-<%}
+</table><%
 
 con.close();%>
 
