@@ -8,6 +8,7 @@
 
 <%if (request.isUserInRole("user") || request.isUserInRole("customerRep")) {%>
 <li><a href="/buyme/6/auctions.jsp">Auctions</a></li>
+<li><a href="/buyme/user/myAuctions.jsp">My Auctions</a></li>
 <%}%>
 
 

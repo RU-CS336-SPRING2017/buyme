@@ -7,35 +7,38 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Auctions</title>
+<title>My Auctions</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1>Auctions</h1>
+<h1>My Auctions</h1><%
+
+if(request.getParameter("addError") != null) {%>
+	Error creating auction: <%=request.getParameter("addError")%><br><%
+}%>
+
+<a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a>
 
 <table>
 
 	<tr>
 		<th>Item</th>
-		<th>Auctioneer</th>
 		<th>Close time</th>
 	</tr><%
 	
 Database db = new Database();
 Connection con = db.connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
+ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE auctioneer='" + request.getUserPrincipal().getName() + "';");
 
 while (rs.next()) {
 	String id = rs.getString("id");
 	String category = rs.getString("category");
 	String subcategory = rs.getString("subcategory");
-	String auctioneer = rs.getString("auctioneer");
 	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));%>
 
 	<tr>
 		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=subcategory%></td>
-		<td><%=auctioneer%></td>
 		<td><%=closeTime%></td>
 	</tr><%
 }%>
