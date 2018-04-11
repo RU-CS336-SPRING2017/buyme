@@ -20,20 +20,21 @@ ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE i
 rs.next();
 
 String subcategory = rs.getString("subcategory");
-String category = rs.getString("subcategory");
+String category = rs.getString("category");
 String openTime = Database.timestampString(rs.getTimestamp("openTime"));
 String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
 String description = rs.getString("description");
 String auctioneer = rs.getString("auctioneer");
 %>
 
-<h1>Auction #<%=id%></h1>
+<h1><%=subcategory%></h1>
 
-<h3><%=subcategory%></h3>
 Category: <%=category%> <br>
 Auctioneer: <%=auctioneer%> <br>
+Auction ID: <%=id%> <br> <br>
+
 Auction opened: <%=openTime%> <br>
-Close time: <%=closeTime%> <br><% 
+Close time: <%=closeTime%> <br> <br><% 
 
 rs = con.createStatement().executeQuery("SELECT field, value FROM AuctionField WHERE auction='" + id + "';");
 while (rs.next()) {
