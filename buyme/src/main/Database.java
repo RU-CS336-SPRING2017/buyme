@@ -3,8 +3,20 @@ package main;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 public class Database {
+	
+	public static String timestampString(Timestamp time) {
+		return time.toLocalDateTime().format(
+			DateTimeFormatter.ofLocalizedDateTime(
+				FormatStyle.MEDIUM,
+				FormatStyle.MEDIUM
+			)
+		);
+	}
 
 	public Database() throws ClassNotFoundException {
 		Class.forName("com.mysql.jdbc.Driver");
