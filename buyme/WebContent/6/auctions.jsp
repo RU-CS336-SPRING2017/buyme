@@ -17,12 +17,12 @@
 <a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a>
 
 <table>
+
 	<tr>
 		<th>Item</th>
 		<th>Auctioneer</th>
-	</tr>
-
-<%
+	</tr><%
+	
 Database db = new Database();
 Connection con = db.connect();
 ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
@@ -30,8 +30,7 @@ ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
 while (rs.next()) {
 	String category = rs.getString("category");
 	String subcategory = rs.getString("subcategory");
-	String auctioneer = rs.getString("auctioneer");
-%>
+	String auctioneer = rs.getString("auctioneer");%>
 
 	<tr>
 		<td><%=category%> / <%=subcategory%></td>
