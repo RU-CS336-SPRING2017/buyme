@@ -21,6 +21,7 @@
 	<tr>
 		<th>Item</th>
 		<th>Auctioneer</th>
+		<th>Close time</th>
 	</tr><%
 	
 Database db = new Database();
@@ -28,13 +29,16 @@ Connection con = db.connect();
 ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
 
 while (rs.next()) {
+	String id = rs.getString("id");
 	String category = rs.getString("category");
 	String subcategory = rs.getString("subcategory");
-	String auctioneer = rs.getString("auctioneer");%>
+	String auctioneer = rs.getString("auctioneer");
+	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));%>
 
 	<tr>
-		<td><%=category%> / <%=subcategory%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=subcategory%></td>
 		<td><%=auctioneer%></td>
+		<td><%=closeTime%></td>
 	</tr><%
 }%>
 
