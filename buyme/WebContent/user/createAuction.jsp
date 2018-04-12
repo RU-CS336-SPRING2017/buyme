@@ -12,9 +12,8 @@
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1>Create Auction</h1>
+<h1>Create Auction</h1><%
 
-<%
 String category = request.getParameter("category");
 String subcategory = request.getParameter("subcategory");
 
