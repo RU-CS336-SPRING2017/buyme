@@ -51,9 +51,9 @@ if (category == null) {%>
 
 	<form action="/buyme/user/CreateAuction" method="post">
 		
-		<label>Initial Price: <input required name="initialPrice" type="number"></label><br>
-		<label>Bid Increment: <input required name="bidIncrement" type="number"></label><br>
-		<label>Minimum Price: <input required name="minimumPrice" type="number"></label><br>
+		<label>Initial Price: <input required name="initialPrice" type="number" step="0.01"></label><br>
+		<label>Bid Increment: <input required name="bidIncrement" type="number" step="0.01"></label><br>
+		<label>Minimum Price: <input required name="minimumPrice" type="number" step="0.01"></label><br>
 		<label>Close Time: <input required name="closeTime" type="datetime-local"></label><br><%
 		
 		Database db = new Database();
