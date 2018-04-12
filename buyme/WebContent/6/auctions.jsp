@@ -21,7 +21,7 @@ if(request.getParameter("removeError") != null) {%>
 <table>
 
 	<tr>
-		<th>Item</th>
+		<th>Title</th>
 		<th>Auctioneer</th>
 		<th>Close time</th>
 	</tr><%
@@ -32,13 +32,14 @@ ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
 
 while (rs.next()) {
 	String id = rs.getString("id");
+	String title = rs.getString("title");
 	String category = rs.getString("category");
 	String subcategory = rs.getString("subcategory");
 	String auctioneer = rs.getString("auctioneer");
 	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));%>
 
 	<tr>
-		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=subcategory%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></a></td>
 		<td><%=auctioneer%></td>
 		<td><%=closeTime%></td>
 	</tr><%
