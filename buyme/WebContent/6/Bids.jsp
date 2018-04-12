@@ -20,6 +20,8 @@ String title = rs.getString("title");%>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
+<h1></h1>
+
 <table>
 
 	<tr>
