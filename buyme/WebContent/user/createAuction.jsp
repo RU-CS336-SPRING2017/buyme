@@ -51,10 +51,10 @@ if (category == null) {%>
 
 	<form action="/buyme/user/CreateAuction" method="post">
 		
-		<label>Initial Price: <input name="initialPrice" type="number"></label><br>
-		<label>Bid Increment: <input name="bidIncrement" type="number"></label><br>
-		<label>Minimum Price: <input name="minimumPrice" type="number"></label><br>
-		<label>Close Time: <input name="closeTime" type="datetime-local"></label><br><%
+		<label>Initial Price: <input required name="initialPrice" type="number"></label><br>
+		<label>Bid Increment: <input required name="bidIncrement" type="number"></label><br>
+		<label>Minimum Price: <input required name="minimumPrice" type="number"></label><br>
+		<label>Close Time: <input required name="closeTime" type="datetime-local"></label><br><%
 		
 		Database db = new Database();
 		Connection con = db.connect();
@@ -66,7 +66,7 @@ if (category == null) {%>
 			<label><%=field%>: <input required type="text" name="<%=field%>"></label><br><%
 		}%>
 		
-		<label>Description: <textarea name="description"></textarea></label> <br>
+		<label>Description: <textarea required name="description"></textarea></label> <br>
 		
 		<input type="hidden" value="<%=category%>" name="category">
 		<input type="hidden" value="<%=subcategory%>" name="subcategory">
