@@ -1,7 +1,9 @@
 package main;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
@@ -106,5 +108,24 @@ public class Database {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM CategoryField WHERE category='" + category + "' AND name='" + field + "';");
 		con.close();
+	}
+	
+	public BigDecimal getCurrentBid(String auctionId) throws SQLException {
+		Connection con = this.connect();
+		con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+		con.setAutoCommit(false);
+		ResultSet rs = con.createStatement().executeQuery("SELECT initialPrice FROM Auction WHERE id =" + auctionId);
+		rs.next();
+		BigDecimal ret = rs.getBigDecimal("initialPrice");
+		rs = con.createStatement().executeQuery("SELECT MAX(amount) max FROM Bid WHERE auction=" + auctionId);
+		if (rs.next()) {
+			BigDecimal maxBid = rs.getBigDecimal("max");
+			if (maxBid.compareTo(ret) > 0) {
+				ret = maxBid;
+			}
+		}
+		con.commit();
+		con.close();
+		return ret;
 	}
 }

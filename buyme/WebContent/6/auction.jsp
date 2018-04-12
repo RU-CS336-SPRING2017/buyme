@@ -35,8 +35,11 @@ if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInR
 }
 
 if (request.isUserInRole("user")) {%>
-	<a href="/buyme/user/bid.jsp"><input type="button" value="Bid"></a><br><br><%
+	<a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a><br><br><%
 }%>
+
+Current bid: $<%=db.getCurrentBid(id)%> <br>
+<a href="">Bid history</a> <br><br>
 
 Category: <%=category%>/<%=subcategory%> <br>
 Auctioneer: <%=auctioneer%> <br>
