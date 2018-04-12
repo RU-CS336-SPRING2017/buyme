@@ -19,8 +19,8 @@ CREATE TABLE Message (
     subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
     dateTime DATETIME NOT NULL,
-    sentBy VARCHAR(255) NOT NULL,
-    receivedBy VARCHAR(255) NOT NULL,
+    sentBy VARCHAR(255),
+    receivedBy VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (sentBy)
         REFERENCES Account (username)
