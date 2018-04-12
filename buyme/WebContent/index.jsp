@@ -10,7 +10,7 @@
 
 <h1>BuyMe</h1>
 <ul>
-<li><a href="/buyme/user/dashboard.jsp">Goto dashboard</a></li>
+<li><a href="/buyme/user/dashboard.jsp">Go to dashboard</a></li>
 </ul>
 
 </body>
