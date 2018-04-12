@@ -118,8 +118,9 @@ public class Database {
 		rs.next();
 		BigDecimal ret = rs.getBigDecimal("initialPrice");
 		rs = con.createStatement().executeQuery("SELECT MAX(amount) max FROM Bid WHERE auction=" + auctionId);
-		if (rs.next()) {
-			BigDecimal maxBid = rs.getBigDecimal("max");
+		rs.next();
+		BigDecimal maxBid = rs.getBigDecimal("max");
+		if (maxBid != null) {
 			if (maxBid.compareTo(ret) > 0) {
 				ret = maxBid;
 			}
