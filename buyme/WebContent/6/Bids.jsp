@@ -15,12 +15,12 @@ String title = rs.getString("title");%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title><%=title%>/Bids</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1></h1>
+<h1><a href="/buyme/6/auction.jsp?id=<%=auction%>"><%=title%></a>/Bids</h1>
 
 <table>
 
