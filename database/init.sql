@@ -1,4 +1,4 @@
-USE BuyMe;
+USE buyme;
 
 INSERT INTO Account (username, password, type)
 VALUES ('admin', 'admin', 'admin');
