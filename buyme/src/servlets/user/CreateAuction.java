@@ -34,6 +34,8 @@ public class CreateAuction extends HttpServlet {
 		String auctioneer = request.getUserPrincipal().getName();
 		String title = request.getParameter("title");
 		
+		if (minimumPrice.equals("")) minimumPrice = null;
+		
 		Connection con = null;
 		
 		try {
@@ -45,7 +47,7 @@ public class CreateAuction extends HttpServlet {
 			
 			con.createStatement().execute(
 					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, minimumPrice, description, auctioneer, subcategory, category, title) \n" +
-					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + minimumPrice + "', '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "', '" + title + "');"
+					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", " + minimumPrice + ", '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "', '" + title + "');"
 			);
 			
 			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");

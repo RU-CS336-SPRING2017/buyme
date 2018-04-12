@@ -74,7 +74,7 @@ CREATE TABLE Auction (
     closeTime DATETIME NOT NULL,
     initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
-    minimumPrice DECIMAL(8,2) NOT NULL,
+    minimumPrice DECIMAL(8,2),
     description LONGTEXT NOT NULL,
     auctioneer VARCHAR(255) NOT NULL,
     subcategory VARCHAR(255) NOT NULL,

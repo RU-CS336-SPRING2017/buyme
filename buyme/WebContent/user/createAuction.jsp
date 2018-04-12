@@ -52,7 +52,7 @@ if (category == null) {%>
 		<label>Title: <input required type="text" name="title"></label><br><br>
 		<label>Initial Price: <input required name="initialPrice" type="number" step="0.01"></label><br>
 		<label>Bid Increment: <input required name="bidIncrement" type="number" step="0.01"></label><br>
-		<label>Minimum Price: <input required name="minimumPrice" type="number" step="0.01"></label><br><br>
+		<label>Minimum Price: <input name="minimumPrice" type="number" step="0.01"></label><br><br>
 		<label>Close Time: <input required name="closeTime" type="datetime-local"></label><br><br><%
 		
 		ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
