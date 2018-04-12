@@ -39,7 +39,7 @@ if (request.isUserInRole("user")) {%>
 }%>
 
 Current bid: $<%=db.getCurrentBid(id)%> <br>
-<a href="">Bid history</a> <br><br>
+<a href="/buyme/6/bids.jsp?auction=<%=id%>">Bid history</a> <br><br>
 
 Category: <%=category%>/<%=subcategory%> <br>
 Auctioneer: <%=auctioneer%> <br>
