@@ -7,9 +7,10 @@
     
 String auction = request.getParameter("auction");
 Connection con = new Database().connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT title FROM Auction WHERE id=" + auction);
+ResultSet rs = con.createStatement().executeQuery("SELECT title, initialPrice FROM Auction WHERE id=" + auction);
 rs.next();
-String title = rs.getString("title");%>
+String title = rs.getString("title");
+BigDecimal initialPrice = rs.getBigDecimal("initialPrice");%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -21,6 +22,8 @@ String title = rs.getString("title");%>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
 <h1><a href="/buyme/6/auction.jsp?id=<%=auction%>"><%=title%></a>/Bids</h1>
+
+Initial price: $<%=initialPrice%><br><br>
 
 <table>
 
