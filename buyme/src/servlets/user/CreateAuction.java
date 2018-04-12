@@ -45,7 +45,7 @@ public class CreateAuction extends HttpServlet {
 			con.setAutoCommit(false);
 			con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
-			con.createStatement().execute(
+			con.createStatement().executeUpdate(
 					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, minimumPrice, description, auctioneer, subcategory, category, title) \n" +
 					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", " + minimumPrice + ", '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "', '" + title + "');"
 			);
@@ -57,7 +57,7 @@ public class CreateAuction extends HttpServlet {
 				String fieldName = rs.getString("name");
 				String fieldValue = request.getParameter(fieldName);
 				
-				con.createStatement().execute( 
+				con.createStatement().executeUpdate( 
 						"INSERT INTO AuctionField (auction, field, category, value) \n" +
 						"VALUES (LAST_INSERT_ID(), '" + fieldName + "', '" + category + "', '" + fieldValue + "');"
 				);
