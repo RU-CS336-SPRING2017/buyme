@@ -17,12 +17,12 @@
 String category = request.getParameter("category");
 String subcategory = request.getParameter("subcategory");
 
+Connection con = new Database().connect();
+
 if (category == null) {%>
 	
 	<h3>Choose a category</h3><%
 	
-	Database db = new Database();
-	Connection con = db.connect();
 	ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemCategory;");%>
 	
 	<ul><%
@@ -36,8 +36,6 @@ if (category == null) {%>
 	
 	<h3>Choose a subcategory</h3><%
 	
-	Database db = new Database();
-	Connection con = db.connect();
 	ResultSet rs = con.createStatement().executeQuery("SELECT name FROM ItemSubcategory WHERE category='" + category + "';");%>
 	
 	<ul><%
@@ -57,8 +55,6 @@ if (category == null) {%>
 		<label>Minimum Price: <input required name="minimumPrice" type="number" step="0.01"></label><br><br>
 		<label>Close Time: <input required name="closeTime" type="datetime-local"></label><br><br><%
 		
-		Database db = new Database();
-		Connection con = db.connect();
 		ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
 		
 		while (rs.next()) {
@@ -74,8 +70,9 @@ if (category == null) {%>
 		<input type="submit" value="Create">
 	
 	</form><%
-}%>
+}
 
+con.close();%>
 
 </body>
 </html>
