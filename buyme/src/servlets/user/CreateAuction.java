@@ -32,6 +32,7 @@ public class CreateAuction extends HttpServlet {
 		String description = request.getParameter("description");
 		String closeTime = request.getParameter("closeTime");
 		String auctioneer = request.getUserPrincipal().getName();
+		String title = request.getParameter("title");
 		
 		Connection con = null;
 		
@@ -43,8 +44,8 @@ public class CreateAuction extends HttpServlet {
 			con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			
 			con.createStatement().execute(
-					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, minimumPrice, description, auctioneer, subcategory, category) \n" +
-					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + minimumPrice + "', '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "');"
+					"INSERT INTO Auction (openTime, closeTime, initialPrice, bidIncrement, minimumPrice, description, auctioneer, subcategory, category, title) \n" +
+					"VALUES ('" + LocalDateTime.now().toString() + "', '" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", '" + minimumPrice + "', '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "', '" + title + "');"
 			);
 			
 			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
