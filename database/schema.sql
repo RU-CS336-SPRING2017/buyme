@@ -74,11 +74,12 @@ CREATE TABLE Auction (
     closeTime DATETIME NOT NULL,
     initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
-    minimumPrice DECIMAL(8,2),
-    description LONGTEXT,
+    minimumPrice DECIMAL(8,2) NOT NULL,
+    description LONGTEXT NOT NULL,
     auctioneer VARCHAR(255) NOT NULL,
     subcategory VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (auctioneer)
         REFERENCES Account (username)
