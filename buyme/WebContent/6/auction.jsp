@@ -6,11 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-<jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include><%
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><%
 
 String id = request.getParameter("id");
 
@@ -24,10 +20,18 @@ String category = rs.getString("category");
 String openTime = Database.timestampString(rs.getTimestamp("openTime"));
 String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
 String description = rs.getString("description");
-String auctioneer = rs.getString("auctioneer");
-%>
+String auctioneer = rs.getString("auctioneer");%>
 
-<h1><%=subcategory%></h1>
+<title><%=subcategory%></title>
+</head>
+<body>
+<jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
+
+<h1><%=subcategory%></h1><%
+
+if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInRole("customerRep")) {%>
+	<a href="/buyme/6/RemoveAuction?id=<%=id%>"><input type="button" value="Remove auction"></a><br><br><%
+}%>
 
 Category: <%=category%> <br>
 Auctioneer: <%=auctioneer%> <br>

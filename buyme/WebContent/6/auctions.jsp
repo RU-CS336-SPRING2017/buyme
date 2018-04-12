@@ -12,7 +12,11 @@
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1>Auctions</h1>
+<h1>Auctions</h1><%
+
+if(request.getParameter("removeError") != null) {%>
+	Error removing auction with ID: <%=request.getParameter("removeError")%><br><%
+}%>
 
 <table>
 

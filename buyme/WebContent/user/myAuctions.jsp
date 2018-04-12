@@ -18,11 +18,16 @@ if(request.getParameter("addError") != null) {%>
 	Error creating auction: <%=request.getParameter("addError")%><br><%
 }%>
 
-<a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a>
+<a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a><%
+
+if(request.getParameter("removeError") != null) {%>
+	Error removing auction with ID: <%=request.getParameter("removeError")%><br><%
+}%>
 
 <table>
 
 	<tr>
+		<th>ID</th>
 		<th>Item</th>
 		<th>Close time</th>
 	</tr><%
@@ -38,6 +43,7 @@ while (rs.next()) {
 	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));%>
 
 	<tr>
+		<td><%=id%></td>
 		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=subcategory%></td>
 		<td><%=closeTime%></td>
 	</tr><%
