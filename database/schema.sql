@@ -16,11 +16,11 @@ CREATE TABLE Account (
 -- get deleted, the message remains.
 CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
-    subject VARCHAR(255),
+    subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
     dateTime DATETIME NOT NULL,
-    sentBy VARCHAR(255),
-    receivedBy VARCHAR(255),
+    sentBy VARCHAR(255) NOT NULL,
+    receivedBy VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (sentBy)
         REFERENCES Account (username)
