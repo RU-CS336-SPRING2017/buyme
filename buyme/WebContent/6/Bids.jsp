@@ -23,7 +23,12 @@ BigDecimal initialPrice = rs.getBigDecimal("initialPrice");%>
 
 <h1><a href="/buyme/6/auction.jsp?id=<%=auction%>"><%=title%></a>/Bids</h1>
 
-Initial price: $<%=initialPrice%><br><br>
+Initial price: $<%=initialPrice%><br><br><%
+
+String removeError = request.getParameter("removeError");
+if (removeError != null) {%>
+	<p>Error removing bid<%
+}%>
 
 <table>
 
@@ -44,7 +49,10 @@ Initial price: $<%=initialPrice%><br><br>
 		<tr>
 			<td><%=bidder%></td>
 			<td>$<%=amount%></td>
-			<td><%=time%></td>
+			<td><%=time%></td><%
+			if (request.isUserInRole("customerRep")) {%>
+				<td><a href="/buyme/customerRep/RemoveBid?auction=<%=auction%>&amount=<%=amount%>">Remove bid</a></td><%
+			}%>
 		</tr><%
 	}%>
 	
