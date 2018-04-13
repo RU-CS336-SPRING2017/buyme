@@ -143,12 +143,14 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
+-- Makes sure new bids are higher then the
+-- current max bid or initial bid
 CREATE TRIGGER checkNewBid
 BEFORE INSERT ON Bid
 FOR EACH ROW
 BEGIN
     SET
-        @maxBid = (SELECT MAX(amount) FROM Bid),
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
         @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
         @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
     IF NEW.amount < @initialPrice
@@ -158,4 +160,32 @@ BEGIN
     THEN
         SET NEW.amount = NULL;
     END IF;
+END;
+
+-- Notify old winners when their bid
+-- has been exceeded
+CREATE TRIGGER notifyOldWinner
+AFTER INSERT ON Bid
+FOR EACH ROW
+BEGIN
+    SET
+        @oldMaxBid = (
+            SELECT MAX(amount) FROM Bid 
+            WHERE auction=NEW.auction AND amount <> NEW.amount
+        ),
+        @oldWinner = (
+            SELECT bidder FROM Bid
+            WHERE auction=NEW.auction AND amount=@oldMaxBid
+        ),
+        @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
+    INSERT INTO Message (subject, text, dateTime, sentBy, receivedBy)
+    VALUES (
+        'Your bid has been exceeded',
+        CONCAT(
+            'Your winning bid of $', @oldMaxBid,
+            ' for the auction <a href="/buyme/6/auction.jsp?id=',
+            NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+        ),
+        NOW(), 'admin', @oldWinner
+    );
 END;
