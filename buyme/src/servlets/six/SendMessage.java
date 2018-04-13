@@ -35,8 +35,8 @@ public class SendMessage extends HttpServlet {
 			
 			con = new Database().connect();
 			con.createStatement().executeUpdate(
-				"INSERT INTO Message (subject, text, dateTime, sentBy, receivedBy) \n" +
-				"VALUES ('" + subject + "', '" + text + "', '" + LocalDateTime.now() + "', '" + sentBy + "', '" + receivedBy + "');"
+				"INSERT INTO Message (subject, text, sentBy, receivedBy) \n" +
+				"VALUES ('" + subject + "', '" + text + "', '" + sentBy + "', '" + receivedBy + "');"
 			);
 			
 			response.sendRedirect("/buyme/6/messages.jsp?outbox");
