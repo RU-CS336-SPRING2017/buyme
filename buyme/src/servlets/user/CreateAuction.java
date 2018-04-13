@@ -69,7 +69,7 @@ public class CreateAuction extends HttpServlet {
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			try { if (con != null) { con.rollback(); } } catch (SQLException e1) {}
-			response.sendRedirect("/buyme/user/myAuctions.jsp?addError=" + subcategory);
+			response.sendRedirect("/buyme/user/myAuctions.jsp?addError=" + title);
 			
 		} finally { try { if (con != null) { con.close(); } } catch (SQLException e) {} }
 	}

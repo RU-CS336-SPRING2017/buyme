@@ -15,13 +15,13 @@
 <h1>My Auctions</h1><%
 
 if(request.getParameter("addError") != null) {%>
-	Error creating auction: <%=request.getParameter("addError")%><br><%
+	<p>Error creating auction: <%=request.getParameter("addError")%></p><%
 }%>
 
 <a href="/buyme/user/createAuction.jsp"><input type="button" value="Create auction"></a><br><br><%
 
 if(request.getParameter("removeError") != null) {%>
-	Error removing auction with ID: <%=request.getParameter("removeError")%><br><%
+	<p>Error removing auction with ID: <%=request.getParameter("removeError")%></p><%
 }%>
 
 <table>

@@ -15,7 +15,7 @@
 <h1>Auctions</h1><%
 
 if(request.getParameter("removeError") != null) {%>
-	Error removing auction with ID: <%=request.getParameter("removeError")%><br><%
+	<p>Error removing auction with ID: <%=request.getParameter("removeError")%></p><%
 }%>
 
 <table>
