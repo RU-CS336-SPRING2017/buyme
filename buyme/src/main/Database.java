@@ -1,6 +1,9 @@
 package main;
 
+<<<<<<< HEAD
 import java.time.LocalDateTime;
+=======
+>>>>>>> master
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -64,6 +67,7 @@ public class Database {
 		con.createStatement().execute("DELETE FROM Account WHERE username='" + username + "';");
 		con.close();
 	}
+<<<<<<< HEAD
 	/**
 	 * Updates password of a users account
 	 */
@@ -73,6 +77,9 @@ public class Database {
 				+ username + "';");
 		con.close();
 	}
+=======
+	
+>>>>>>> master
 	/**
 	 * Adds a category
 	 */
@@ -117,6 +124,7 @@ public class Database {
 		con.createStatement().execute("DELETE FROM CategoryField WHERE category='" + category + "' AND name='" + field + "';");
 		con.close();
 	}
+<<<<<<< HEAD
 	public void deleteMessage(String mId) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM Message WHERE id=" + mId + ";");
@@ -130,6 +138,8 @@ public class Database {
 					" VALUES (DEFAULT, '" + subject + "', '" + text + "', '" + dtf.format(now) + "', '" + sentBy + "', '" + sentTo + "');");
 		con.close();
 	}
+=======
+>>>>>>> master
 	
 	public BigDecimal getCurrentBid(String auctionId) throws SQLException {
 		Connection con = this.connect();

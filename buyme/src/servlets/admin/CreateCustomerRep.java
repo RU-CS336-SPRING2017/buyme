@@ -1,4 +1,4 @@
-package servlets;
+package servlets.admin;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,32 +11,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import main.Database;
 
-/**
- * Registers a new user using POST parameters: username and password
- */
-@WebServlet("/register")
-public class Register extends HttpServlet {
+@WebServlet("/admin/CreateCustomerRep")
+public class CreateCustomerRep extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Register() {
+    public CreateCustomerRep() {
         super();
     }
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * Create a customer rep account and redirect to the page that lists the accounts
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		try {
 			Database db = new Database();
-			db.createUser(username, password);
-			response.sendRedirect("/buyme/?registrationSuccess=" + username);
+			db.createCustomerRep(username, password);
+			response.sendRedirect("/buyme/admin/customerRepAccounts.jsp");
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/register.jsp?registrationError=" + username);
+			response.sendRedirect("/buyme/admin/customerRepAccounts.jsp?addError=" + username);
 		}
 	}
 

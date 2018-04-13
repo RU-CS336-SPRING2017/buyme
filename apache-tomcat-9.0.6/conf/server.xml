@@ -143,7 +143,7 @@
              available for use by the Realm.  -->
         <Realm className="org.apache.catalina.realm.JDBCRealm"
 				driverName="com.mysql.jdbc.Driver"
-				connectionURL="jdbc:mysql://crib.qwezey.com/BuyMe?user=root&amp;password=password"
+				connectionURL="jdbc:mysql://crib.qwezey.com/buymeDB?user=root&amp;password=password"
 				userTable="Account" userNameCol="username" userCredCol="password"
 				userRoleTable="Account" roleNameCol="type" />
       </Realm>

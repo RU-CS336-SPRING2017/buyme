@@ -1,14 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Invalid Credentials</title>
+<title>Login Error</title>
 </head>
 <body>
-<h2>Invalid credentials.</h2>
-	<a href="/buyme/"> <input type="button" value="Go home">
-	</a>
+	<h1>Login Error</h1>
+	<h3>Invalid Credentials</h3>
+	<jsp:include page="WEB-INF/includes/loginForm.jsp"></jsp:include>
 </body>
 </html>

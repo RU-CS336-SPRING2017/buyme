@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS BuyMe;
-CREATE DATABASE BuyMe;
-USE BuyMe;
+DROP DATABASE IF EXISTS buymeDB;
+CREATE DATABASE buymeDB;
+USE buymeDB;
 
 -- Represents an account that can either be an
 -- admin, customer rep, or user.
@@ -16,7 +16,7 @@ CREATE TABLE Account (
 -- get deleted, the message remains.
 CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
-    subject VARCHAR(255),
+    subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
     dateTime DATETIME NOT NULL,
     sentBy VARCHAR(255),
@@ -49,30 +49,18 @@ CREATE TABLE ItemSubcategory (
         ON UPDATE CASCADE
 );
 
--- Represents a required field of a category.
+-- Represents a required field of a category or subcategory.
 CREATE TABLE CategoryField (
     name VARCHAR(255),
-    value VARCHAR(255),
     category VARCHAR(255),
+    subcategory VARCHAR(255),
     PRIMARY KEY (name, category),
     FOREIGN KEY (category)
         REFERENCES ItemCategory (name)
         ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
--- Relates fields that should be exclusive to a subcategory.
-CREATE TABLE fieldOfSubcategory (
-    field VARCHAR(255),
-    category VARCHAR(255),
-    subcategory VARCHAR(255),
-    PRIMARY KEY (field, subcategory, category),
-    FOREIGN KEY (field, category)
-        REFERENCES CategoryField (name, category)
-        ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (subcategory, category)
-        REFERENCES ItemSubcategory (name, category)
+    FOREIGN KEY (subcategory)
+        REFERENCES ItemSubcategory (name)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -84,19 +72,38 @@ CREATE TABLE Auction (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     openTime DATETIME NOT NULL,
     closeTime DATETIME NOT NULL,
-    currentBid DECIMAL(8,2),
+    initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
-    description LONGTEXT,
+    minimumPrice DECIMAL(8,2),
+    description LONGTEXT NOT NULL,
     auctioneer VARCHAR(255) NOT NULL,
-    inSubcategory VARCHAR(255) NOT NULL,
-    inCategory VARCHAR(255) NOT NULL,
+    subcategory VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (auctioneer)
         REFERENCES Account (username)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (inSubcategory, inCategory)
+    FOREIGN KEY (subcategory, category)
         REFERENCES ItemSubcategory (name, category)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Holds data for required fields in auctions.
+CREATE TABLE AuctionField (
+    auction BIGINT UNSIGNED,
+    field VARCHAR(255),
+    category VARCHAR(255),
+    value VARCHAR(255),
+    PRIMARY KEY (auction, field, category),
+    FOREIGN KEY (auction)
+        REFERENCES Auction (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (field, category)
+        REFERENCES CategoryField (name, category)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -106,9 +113,9 @@ CREATE TABLE Auction (
 CREATE TABLE Bid (
     dateTime DATETIME NOT NULL,
     amount DECIMAL(8,2),
-    bidder VARCHAR(255),
+    bidder VARCHAR(255) NOT NULL,
     auction BIGINT UNSIGNED,
-    PRIMARY KEY (amount, bidder, auction),
+    PRIMARY KEY (amount, auction),
     FOREIGN KEY (bidder)
         REFERENCES Account (username)
         ON DELETE CASCADE
@@ -118,3 +125,37 @@ CREATE TABLE Bid (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+-- Represent an automatic bid that is identified by the
+-- max amount, bidder, and auction.
+CREATE TABLE AutoBid (
+    max DECIMAL(8,2),
+    bidder VARCHAR(255),
+    auction BIGINT UNSIGNED,
+    PRIMARY KEY (max, bidder, auction),
+    FOREIGN KEY (bidder)
+        REFERENCES Account (username)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (auction)
+        REFERENCES Auction (id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+CREATE TRIGGER checkNewBid
+BEFORE INSERT ON Bid
+FOR EACH ROW
+BEGIN
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid),
+        @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
+    IF NEW.amount < @initialPrice
+    OR NEW.amount < @maxBid
+    OR NEW.amount - @initialPrice < @bidIncrement
+    OR NEW.amount - @maxBid < @bidIncrement
+    THEN
+        SET NEW.amount = NULL;
+    END IF;
+END;
