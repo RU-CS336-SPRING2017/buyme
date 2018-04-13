@@ -21,7 +21,12 @@ if (request.getParameter("outbox") != null) {
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1>Messages</h1>
+<h1>Messages</h1><%
+
+String sendError = request.getParameter("sendError");
+if (sendError != null) {%>
+	<p>Error sending message to <%=sendError%></p><%
+}%>
 
 <a href="/buyme/6/compose.jsp"><input type="button" value="Compse message"></a><%
 
@@ -54,10 +59,11 @@ if (inbox) {%>
 		String person = null;
 		if (inbox) { person = rs.getString("sentBy"); }
 		else { person = rs.getString("receivedBy"); }
-		String time = Database.timestampString(rs.getTimestamp("dateTime"));%>
+		String time = Database.timestampString(rs.getTimestamp("dateTime"));
+		String id = rs.getString("id");%>
 		
 		<tr>
-			<td><a href=""><%=subject%></a></td>
+			<td><a href="/buyme/6/message.jsp?id=<%=id%>"><%=subject%></a></td>
 			<td><%=person%></td>
 			<td><%=time%></td>
 		</tr><%

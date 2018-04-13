@@ -15,7 +15,7 @@ public class Database {
 		return time.toLocalDateTime().format(
 			DateTimeFormatter.ofLocalizedDateTime(
 				FormatStyle.MEDIUM,
-				FormatStyle.MEDIUM
+				FormatStyle.SHORT
 			)
 		);
 	}
