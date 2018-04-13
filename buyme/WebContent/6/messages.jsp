@@ -23,7 +23,7 @@ if (request.getParameter("outbox") != null) {
 
 <h1>Messages</h1>
 
-<a><input type="button" value="Compse message"></a><%
+<a href="/buyme/6/compose.jsp"><input type="button" value="Compse message"></a><%
 
 if (inbox) {%>
 	<p><a href="/buyme/6/messages.jsp?outbox">Outbox</a></p>
@@ -53,7 +53,7 @@ if (inbox) {%>
 		String subject = rs.getString("subject");
 		String person = null;
 		if (inbox) { person = rs.getString("sentBy"); }
-		else { person = rs.getString("recievedBy"); }
+		else { person = rs.getString("receivedBy"); }
 		String time = Database.timestampString(rs.getTimestamp("dateTime"));%>
 		
 		<tr>
