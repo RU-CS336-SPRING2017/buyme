@@ -36,11 +36,16 @@ public class Bid extends HttpServlet {
 			
 			if (type.equals("auto")) {
 				
+				con.createStatement().executeUpdate(
+						"INSERT INTO AutoBid (max, bidder, auction)" +
+						"VALUES ('" + amount + "', '" + bidder + "', '" + auction + "');"
+					);
+				
 			} else if (type.equals("manual")) {
 				
 				con.createStatement().executeUpdate(
-					"INSERT INTO Bid (dateTime, amount, bidder, auction)" +
-					"VALUES ('" + LocalDateTime.now().toString() + "', '" + amount + "', '" + bidder + "', '" + auction + "');"
+					"INSERT INTO Bid (amount, bidder, auction)" +
+					"VALUES ('" + amount + "', '" + bidder + "', '" + auction + "');"
 				);
 			}
 			

@@ -19,7 +19,14 @@ String auction = request.getParameter("auction");%>
 <h1>Bid</h1><%
 
 if (type != null && type.equals("auto")) {%>
-<%
+
+	<form action="/buyme/user/Bid" method="post">
+		<label>Max Amount: <input type="text" name="amount"></label>
+		<input type="hidden" name="type" value="auto">
+		<input type="hidden" name="auction" value="<%=auction%>">
+		<input type="submit" value="Bid">
+	</form><%
+	
 } else if (type != null && type.equals("manual")) {%>
 
 	<form action="/buyme/user/Bid" method="post">
