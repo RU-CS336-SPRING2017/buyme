@@ -21,7 +21,7 @@ String auction = request.getParameter("auction");%>
 if (type != null && type.equals("auto")) {%>
 
 	<form action="/buyme/user/Bid" method="post">
-		<label>Max Amount: <input type="text" name="amount"></label>
+		<label>Max Amount: <input required type="number" step="0.01" name="amount"></label>
 		<input type="hidden" name="type" value="auto">
 		<input type="hidden" name="auction" value="<%=auction%>">
 		<input type="submit" value="Bid">
@@ -30,7 +30,7 @@ if (type != null && type.equals("auto")) {%>
 } else if (type != null && type.equals("manual")) {%>
 
 	<form action="/buyme/user/Bid" method="post">
-		<label>Amount: <input type="text" name="amount"></label>
+		<label>Amount: <input required type="number" step="0.01" name="amount"></label>
 		<input type="hidden" name="type" value="manual">
 		<input type="hidden" name="auction" value="<%=auction%>">
 		<input type="submit" value="Bid">
