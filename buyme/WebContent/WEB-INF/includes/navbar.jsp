@@ -17,8 +17,7 @@
 
 
 <%if (request.isUserInRole("customerRep")) {%>
-<li>link1</li>
-<li>link2</li>
+<li><a href="/buyme/customerRep/users.jsp">Users</a></li>
 <%}%>
 
 <li><a href="/buyme/logout">Logout</a></li>
