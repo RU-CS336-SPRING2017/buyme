@@ -34,7 +34,7 @@ public class SubmitQuestion extends HttpServlet {
 			db.submitQuestion(aucId, text);
 			response.sendRedirect("/buyme/6/auction.jsp?id=" + aucId);
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/6/auction.jsp?id="+ aucId);
+			response.sendRedirect("/buyme/6/auction.jsp?id="+ aucId + "&error=Oops! Could not submit question:(");
 		}
 	}
 

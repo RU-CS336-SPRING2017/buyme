@@ -32,7 +32,7 @@ CREATE TABLE Message (
         ON UPDATE CASCADE
 );
 
-
+-- Stores inquiries about a particular auction
 CREATE TABLE Question (
     id BIGINT UNSIGNED REFERENCES Auction,
     qId BIGINT UNSIGNED AUTO_INCREMENT,
@@ -40,6 +40,7 @@ CREATE TABLE Question (
     PRIMARY KEY(qId)
 );
 
+-- Store answers to inquiries about a particular auction
 CREATE TABLE Answer (
     aId BIGINT UNSIGNED AUTO_INCREMENT,
     qId BIGINT UNSIGNED REFERENCES Question,
@@ -165,7 +166,22 @@ FOR EACH ROW
 	DELETE FROM Message 
     WHERE Message.sentBy = OLD.username; 
 
+-- Trigger that deletes questions when a particular 
+-- auction is deleted
+CREATE TRIGGER qWOAuction
+BEFORE DELETE ON Auction
+FOR EACH ROW
+	DELETE FROM Question
+    WHERE Question.id = OLD.id;
 
+-- Trigger that deletes answers to question which were
+-- deleted because the auction was deleted
+CREATE TRIGGER aAWOQuestion
+BEFORE DELETE ON Question
+FOR EACH ROW
+	DELETE FROM Answer
+    WHERE Answer.qId = OLD.qId;
+    
 
 
 

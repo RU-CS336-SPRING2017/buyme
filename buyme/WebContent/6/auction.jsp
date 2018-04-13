@@ -76,6 +76,10 @@ Answer: <%=rs2.getString("text") %><br><%} %>
 </form>	
 <%}con.close();%>
 
+<%if (request.getParameter("error") != null){%>
+<%= request.getParameter("error")%><br>
+<% }%>
+
 Ask a Question!<br>
 <form action="/buyme/6/SubmitQuestion?aucId=<%=id %>&" method="post">
 <textarea required name="text" cols="35" rows="1"></textarea><br>
