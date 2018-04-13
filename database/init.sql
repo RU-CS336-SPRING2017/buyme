@@ -1,4 +1,4 @@
-USE buymeDB;
+USE BuyMe;
 
 INSERT INTO Account (username, password, type)
 VALUES ('admin', 'admin', 'admin');

@@ -28,7 +28,7 @@ public class Database {
 	 * Creates a connection to the database
 	 */
 	public Connection connect() throws SQLException {
-		return DriverManager.getConnection("jdbc:mysql://crib.qwezey.com/buymeDB?serverTimezone=UTC&useSSL=false", "root",
+		return DriverManager.getConnection("jdbc:mysql://crib.qwezey.com/BuyMe?serverTimezone=UTC&useSSL=false", "root",
 				"password");
 	}
 
