@@ -18,7 +18,7 @@ CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
-    dateTime DATETIME NOT NULL,
+    dateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     sentBy VARCHAR(255),
     receivedBy VARCHAR(255),
     PRIMARY KEY (id),
@@ -70,7 +70,7 @@ CREATE TABLE CategoryField (
 -- auction has a unique ID.
 CREATE TABLE Auction (
     id BIGINT UNSIGNED AUTO_INCREMENT,
-    openTime DATETIME NOT NULL,
+    openTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     closeTime DATETIME NOT NULL,
     initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE AuctionField (
 -- Represent a bid that is identified by the
 -- amount, bidder, and auction.
 CREATE TABLE Bid (
-    dateTime DATETIME NOT NULL,
+    dateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     amount DECIMAL(8,2),
     bidder VARCHAR(255) NOT NULL,
     auction BIGINT UNSIGNED,
@@ -178,14 +178,22 @@ BEGIN
             WHERE auction=NEW.auction AND amount=@oldMaxBid
         ),
         @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
-    INSERT INTO Message (subject, text, dateTime, sentBy, receivedBy)
+    INSERT INTO Message (subject, text, sentBy, receivedBy)
     VALUES (
         'Your bid has been exceeded',
         CONCAT(
             'Your winning bid of $', @oldMaxBid,
             ' for the auction <a href="/buyme/6/auction.jsp?id=',
             NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
-        ),
-        NOW(), 'admin', @oldWinner
+        ), 'admin', @oldWinner
     );
+END;
+
+CREATE TRIGGER checkAuctionCloseTime
+BEFORE INSERT ON Auction
+FOR EACH ROW
+BEGIN
+    IF NEW.closeTime < CURRENT_TIMESTAMP THEN
+        SET NEW.id = NULL;
+    END IF;
 END;
