@@ -25,7 +25,7 @@
 </tr>
 <%Database db = new Database();
 Connection con = db.connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT sentBy, subject, dateTime, id FROM Message WHERE sentTo='" 
+ResultSet rs = con.createStatement().executeQuery("SELECT sentBy, subject, dateTime, id FROM Message WHERE receivedBy='" 
 + request.getUserPrincipal().getName() + "';");
 while (rs.next()) {%>	
 <tr>

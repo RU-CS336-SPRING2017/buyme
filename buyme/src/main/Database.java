@@ -82,53 +82,71 @@ public class Database {
 		con.createStatement().execute("INSERT INTO ItemCategory (name) VALUES ('" + category + "');");
 		con.close();
 	}
-	
+	/**
+	 * Removes a category
+	 */
 	public void removeCategory(String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM ItemCategory WHERE name='" + category + "';");
 		con.close();
 	}
-	
+	/**
+	 * Adds a category field
+	 */
 	public void addCategoryField(String field, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO CategoryField (name, category) VALUES ('" + field + "', '" + category + "');");
 		con.close();
 	}
-	
+	/**
+	 * Adds a sub category
+	 */
 	public void addSubcategory(String subcategory, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO ItemSubcategory (name, category) VALUES ('" + subcategory + "', '" + category + "');");
 		con.close();
 	}
-	
+	/**
+	 * Removes a category
+	 */
 	public void removeSubcategory(String subcategory, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM ItemSubcategory WHERE name='" + subcategory + "' AND category='" + category + "';");
 		con.close();
 	}
-	
+	/**
+	 * Removes a sub category field
+	 */
 	public void addSubcategoryField(String field, String subcategory, String category) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("INSERT INTO CategoryField (name, category, subcategory) VALUES ('" + field + "', '" + category + "', '" + subcategory + "');");
 		con.close();
 	}
-	
+	/**
+	 * Removes a field
+	 */
 	public void removeField(String category, String field) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM CategoryField WHERE category='" + category + "' AND name='" + field + "';");
 		con.close();
 	}
+	/**
+	 * Deletes a message
+	 */
 	public void deleteMessage(String mId) throws SQLException {
 		Connection con = this.connect();
 		con.createStatement().execute("DELETE FROM Message WHERE id=" + mId + ";");
 		con.close();
 	}
-	public void compose(String sentTo, String sentBy, String subject, String text) throws SQLException {
+	/**
+	 * Composes a message
+	 */
+	public void compose(String receivedBy, String sentBy, String subject, String text) throws SQLException {
 		Connection con = this.connect();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime now = LocalDateTime.now();
-		con.createStatement().execute("INSERT INTO Message (id, subject, text, dateTime, sentBy, sentTo)" +
-					" VALUES (DEFAULT, '" + subject + "', '" + text + "', '" + dtf.format(now) + "', '" + sentBy + "', '" + sentTo + "');");
+		con.createStatement().execute("INSERT INTO Message (id, subject, text, dateTime, sentBy, receivedBy)" +
+					" VALUES (DEFAULT, '" + subject + "', '" + text + "', '" + dtf.format(now) + "', '" + sentBy + "', '" + receivedBy + "');");
 		con.close();
 	}
 	public BigDecimal getCurrentBid(String auctionId) throws SQLException {

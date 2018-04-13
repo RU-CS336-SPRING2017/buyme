@@ -20,13 +20,13 @@ CREATE TABLE Message (
     text LONGTEXT,
     dateTime VARCHAR(32) NOT NULL,
     sentBy VARCHAR(255),
-    sentTo VARCHAR(255),
+    receivedBy VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (sentBy)
         REFERENCES Account (username)
         ON DELETE SET NULL
         ON UPDATE CASCADE,
-    FOREIGN KEY (sentTo)
+    FOREIGN KEY (receivedBy)
         REFERENCES Account (username)
         ON DELETE SET NULL
         ON UPDATE CASCADE
@@ -148,10 +148,11 @@ BEFORE INSERT ON Bid
 FOR EACH ROW
 BEGIN
     SET
-        @maxBid = (SELECT MAX(amount) FROM Bid),
-        @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
-        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
-    IF NEW.amount < @initialPrice
+	@maxBid = (SELECT MAX(amount) FROM Bid);
+    @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction)
+	@bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
+	
+    IF (NEW.amount < @initialPrice)
     OR NEW.amount < @maxBid
     OR NEW.amount - @initialPrice < @bidIncrement
     OR NEW.amount - @maxBid < @bidIncrement
@@ -159,3 +160,17 @@ BEGIN
         SET NEW.amount = NULL;
     END IF;
 END;
+
+
+CREATE TRIGGER checkNullMessage
+BEFORE DELETE ON Account
+FOR EACH ROW
+	DELETE FROM Message 
+    WHERE Message.sentBy = OLD.username; 
+
+
+
+
+
+
+

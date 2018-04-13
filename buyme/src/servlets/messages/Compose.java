@@ -24,15 +24,15 @@ public class Compose extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String sentBy = request.getParameter("sentBy");
-		String sentTo = request.getParameter("sentTo");
+		String receivedBy = request.getParameter("receivedBy");
 		String subject = request.getParameter("subject");
 		String text = request.getParameter("text");
 		try {
 			Database db = new Database();
-			db.compose(sentTo, sentBy, subject, text);
+			db.compose(receivedBy, sentBy, subject, text);
 			response.sendRedirect("/buyme/messages/messages.jsp?success=Message sent!");
 		} catch (ClassNotFoundException | SQLException e) {
-			response.sendRedirect("/buyme/messages/compose.jsp?addError=" + sentTo);
+			response.sendRedirect("/buyme/messages/compose.jsp?addError=" + receivedBy);
 		}
 	}
 

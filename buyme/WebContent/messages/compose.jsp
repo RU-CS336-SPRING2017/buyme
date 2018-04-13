@@ -14,7 +14,7 @@
 	No such user: <%=request.getParameter("addError")%><%}%><br>
 
 <%if (request.getParameter("sentBy") != null) {%>
-<form action="/buyme/messages/Compose?sentBy=<%=request.getParameter("sentBy")%>&sentTo=<%=request.getParameter("sentBy")%>&" method="post">
+<form action="/buyme/messages/Compose?sentBy=<%=request.getParameter("sentBy")%>&receivedBy=<%=request.getParameter("sentBy")%>&" method="post">
 To: <%=request.getParameter("sentBy") %><br>
 Subject: <input required type="text" name="subject"><br>
 <textarea required name="text" cols="40" rows="10"></textarea><br>
@@ -22,7 +22,7 @@ Subject: <input required type="text" name="subject"><br>
 
 else{%>
 <form action="/buyme/messages/Compose?sentBy=<%=request.getUserPrincipal().getName()%>&" method="post">
-To: <input required type="text" name="sentTo"><br>
+To: <input required type="text" name="receivedBy"><br>
 Subject: <input required type="text" name="subject"><br>
 <textarea required name="text" cols="40" rows="10"></textarea><br>
 <input type="submit" value="Send"></form><%}%>
