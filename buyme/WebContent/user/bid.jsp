@@ -11,7 +11,7 @@ String auction = request.getParameter("auction");%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Bide</title>
+<title>Bid</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>

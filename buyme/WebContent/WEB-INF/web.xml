@@ -22,6 +22,7 @@
     <web-resource-collection>
       <web-resource-name>AdminResource</web-resource-name>
       <url-pattern>/admin/*</url-pattern>
+      <url-pattern>/5/*</url-pattern>
       <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <auth-constraint>
@@ -45,6 +46,7 @@
     <web-resource-collection>
       <web-resource-name>UserResource</web-resource-name>
       <url-pattern>/user/*</url-pattern>
+      <url-pattern>/5/*</url-pattern>
       <url-pattern>/6/*</url-pattern>
       <url-pattern>/*</url-pattern>
     </web-resource-collection>
