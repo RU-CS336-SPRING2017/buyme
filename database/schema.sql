@@ -143,15 +143,19 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
-DELIMITER //
-
 CREATE TRIGGER checkNewBid
 BEFORE INSERT ON Bid
 FOR EACH ROW
 BEGIN
-    IF NEW.amount < (SELECT MAX(amount) FROM Bid)
-    OR NEW.amount < (SELECT initialPrice FROM Auction WHERE id=NEW.auction)
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid),
+        @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
+    IF NEW.amount < @initialPrice
+    OR NEW.amount < @maxBid
+    OR NEW.amount - @initialPrice < @bidIncrement
+    OR NEW.amount - @maxBid < @bidIncrement
     THEN
         SET NEW.amount = NULL;
     END IF;
-END //
+END;
