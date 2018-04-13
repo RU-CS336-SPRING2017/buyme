@@ -21,7 +21,8 @@ String category = rs.getString("category");
 String openTime = Database.timestampString(rs.getTimestamp("openTime"));
 String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
 String description = rs.getString("description");
-String auctioneer = rs.getString("auctioneer");%>
+String auctioneer = rs.getString("auctioneer");
+String bidIncrement = rs.getString("bidIncrement");%>
 
 <title><%=title%></title>
 </head>
@@ -31,11 +32,11 @@ String auctioneer = rs.getString("auctioneer");%>
 <h1><%=title%></h1><%
 
 if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInRole("customerRep")) {%>
-	<a href="/buyme/6/RemoveAuction?id=<%=id%>"><input type="button" value="Remove auction"></a><br><br><%
+	<p><a href="/buyme/6/RemoveAuction?id=<%=id%>"><input type="button" value="Remove auction"></a></p><%
 }
 
 if (request.isUserInRole("user")) {%>
-	<a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a><br><br><%
+	<p><a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a></p><%
 }
 
 String bidError = request.getParameter("bidError");
@@ -43,26 +44,36 @@ if (bidError != null) {%>
 	<p>Error bidding $<%=bidError%></p><%
 }%>
 
-Current bid: $<%=db.getCurrentBid(id)%> <br>
-<a href="/buyme/6/bids.jsp?auction=<%=id%>">Bid history</a> <br><br>
+<p>
+	Current bid: $<%=db.getCurrentBid(id)%> <br>
+	<a href="/buyme/6/bids.jsp?auction=<%=id%>">Bid history</a>
+</p>
 
-Category: <%=category%>/<%=subcategory%> <br>
-Auctioneer: <%=auctioneer%> <br>
-Auction ID: <%=id%> <br> <br>
+<p>
+	Category: <%=category%>/<%=subcategory%> <br>
+	Auctioneer: <%=auctioneer%> <br>
+	Auction ID: <%=id%> <br>
+	Bid increment: $<%=bidIncrement%>
+</p>
 
-Auction opened: <%=openTime%> <br>
-Close time: <%=closeTime%> <br> <br><% 
+<p>
+	Auction opened: <%=openTime%> <br>
+	Close time: <%=closeTime%>
+</p>
 
-rs = con.createStatement().executeQuery("SELECT field, value FROM AuctionField WHERE auction='" + id + "';");
-while (rs.next()) {
-	String field = rs.getString("field");
-	String value = rs.getString("value");%>
-	<%=field%>: <%=value%> <br><%
-}%>
+<p><%
+	rs = con.createStatement().executeQuery("SELECT field, value FROM AuctionField WHERE auction='" + id + "';");
+	while (rs.next()) {
+		String field = rs.getString("field");
+		String value = rs.getString("value");%>
+		<%=field%>: <%=value%> <br><%
+	}%>
+</p>
 
-Description: <%=description%><%
-
-con.close();%>
+<h4>Description:</h4>
+<%=description%>
 
 </body>
-</html>
+</html><%
+
+con.close();%>
