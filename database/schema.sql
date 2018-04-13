@@ -18,15 +18,15 @@ CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
-    dateTime DATETIME NOT NULL,
+    dateTime VARCHAR(32) NOT NULL,
     sentBy VARCHAR(255),
-    receivedBy VARCHAR(255),
+    sentTo VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (sentBy)
         REFERENCES Account (username)
         ON DELETE SET NULL
         ON UPDATE CASCADE,
-    FOREIGN KEY (receivedBy)
+    FOREIGN KEY (sentTo)
         REFERENCES Account (username)
         ON DELETE SET NULL
         ON UPDATE CASCADE

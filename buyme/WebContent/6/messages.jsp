@@ -48,8 +48,8 @@ if (inbox) {%>
 	</tr><%
 	
 	String query = "SELECT * FROM Message WHERE ";
-	if (inbox) { query += "receivedBy='"; }
-	else { query += "sentBy='"; }
+	if (inbox) { query += "sentTo='"; }
+	else { query += "receivedBy='"; }
 	query += user + "';";
 	ResultSet rs = con.createStatement().executeQuery(query);
 	
