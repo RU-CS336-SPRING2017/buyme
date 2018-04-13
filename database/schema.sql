@@ -206,6 +206,22 @@ BEGIN
     );
 END;
 
+-- When a new auto bid is made, add a
+-- bid if the max is big enough
+CREATE TRIGGER bidOnAuto
+AFTER INSERT ON AutoBid
+FOR EACH ROW
+BEGIN
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction),
+        @newMaxBid = @maxBid + @bidIncrement;
+    IF NEW.max > @newMaxBid THEN
+        INSERT INTO Bid (amount, bidder, auction)
+        VALUES (@newMaxBid, NEW.bidder, NEW.auction);
+    END IF;
+END;
+
 -- Only allow new auctions where the close time
 -- hasn't already passed
 CREATE TRIGGER checkAuctionCloseTime
