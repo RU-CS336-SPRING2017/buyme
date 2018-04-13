@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS buyme;
-CREATE DATABASE buyme;
-USE buyme;
+DROP DATABASE IF EXISTS buymeDB;
+CREATE DATABASE buymeDB;
+USE buymeDB;
 
 -- Represents an account that can either be an
 -- admin, customer rep, or user.
