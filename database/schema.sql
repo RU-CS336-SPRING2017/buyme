@@ -143,6 +143,23 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
+-- Represents an alert a user makes on a
+-- subcategory
+CREATE TABLE Alert (
+    user VARCHAR(255),
+    category VARCHAR(255),
+    subcategory VARCHAR(255),
+    PRIMARY KEY (user, category, subcategory),
+    FOREIGN KEY (user)
+        REFERENCES Account (username)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (category, subcategory)
+        REFERENCES ItemSubcategory (category, name)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 -- Makes sure new bids are higher then the
 -- current max bid or initial bid
 CREATE TRIGGER checkNewBid
