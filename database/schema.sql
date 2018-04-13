@@ -142,3 +142,16 @@ CREATE TABLE AutoBid (
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
+
+DELIMITER //
+
+CREATE TRIGGER checkNewBid
+BEFORE INSERT ON Bid
+FOR EACH ROW
+BEGIN
+    IF NEW.amount < (SELECT MAX(amount) FROM Bid)
+    OR NEW.amount < (SELECT initialPrice FROM Auction WHERE id=NEW.auction)
+    THEN
+        SET NEW.amount = NULL;
+    END IF;
+END //
