@@ -113,9 +113,9 @@ CREATE TABLE AuctionField (
 CREATE TABLE Bid (
     dateTime DATETIME NOT NULL,
     amount DECIMAL(8,2),
-    bidder VARCHAR(255),
+    bidder VARCHAR(255) NOT NULL,
     auction BIGINT UNSIGNED,
-    PRIMARY KEY (amount, bidder, auction),
+    PRIMARY KEY (amount, auction),
     FOREIGN KEY (bidder)
         REFERENCES Account (username)
         ON DELETE CASCADE
