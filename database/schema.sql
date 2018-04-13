@@ -18,7 +18,7 @@ CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
-    dateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    dateTime DATETIME NOT NULL DEFAULT NOW(),
     sentBy VARCHAR(255),
     receivedBy VARCHAR(255),
     PRIMARY KEY (id),
@@ -70,7 +70,7 @@ CREATE TABLE CategoryField (
 -- auction has a unique ID.
 CREATE TABLE Auction (
     id BIGINT UNSIGNED AUTO_INCREMENT,
-    openTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    openTime DATETIME NOT NULL DEFAULT NOW(),
     closeTime DATETIME NOT NULL,
     initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
@@ -111,7 +111,7 @@ CREATE TABLE AuctionField (
 -- Represent a bid that is identified by the
 -- amount, bidder, and auction.
 CREATE TABLE Bid (
-    dateTime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    dateTime DATETIME NOT NULL DEFAULT NOW(),
     amount DECIMAL(8,2),
     bidder VARCHAR(255) NOT NULL,
     auction BIGINT UNSIGNED,
@@ -189,11 +189,13 @@ BEGIN
     );
 END;
 
+-- Only allow new auctions where the close time
+-- hasn't already passed
 CREATE TRIGGER checkAuctionCloseTime
 BEFORE INSERT ON Auction
 FOR EACH ROW
 BEGIN
-    IF NEW.closeTime < CURRENT_TIMESTAMP THEN
-        SET NEW.id = NULL;
+    IF NEW.closeTime < NOW() THEN
+        SET NEW.id = 'string';
     END IF;
 END;
