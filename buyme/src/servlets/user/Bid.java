@@ -47,7 +47,7 @@ public class Bid extends HttpServlet {
 			response.sendRedirect("/buyme/6/auction.jsp?id=" + auction);
 			
 		} catch (Exception e) {
-			response.sendRedirect("/buyme/6/auction.jsp?id=" + auction + "&bidError=true");
+			response.sendRedirect("/buyme/6/auction.jsp?id=" + auction + "&bidError=" + amount);
 		} finally {
 			try {
 				if (con != null) con.close();

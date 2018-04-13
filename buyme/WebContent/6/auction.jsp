@@ -36,6 +36,11 @@ if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInR
 
 if (request.isUserInRole("user")) {%>
 	<a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a><br><br><%
+}
+
+String bidError = request.getParameter("bidError");
+if (bidError != null) {%>
+	<p>Error bidding $<%=bidError%></p><%
 }%>
 
 Current bid: $<%=db.getCurrentBid(id)%> <br>
