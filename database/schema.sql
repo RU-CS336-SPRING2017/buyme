@@ -32,6 +32,21 @@ CREATE TABLE Message (
         ON UPDATE CASCADE
 );
 
+
+CREATE TABLE Question (
+    id BIGINT UNSIGNED REFERENCES Auction,
+    qId BIGINT UNSIGNED AUTO_INCREMENT,
+    text LONGTEXT,
+    PRIMARY KEY(qId)
+);
+
+CREATE TABLE Answer (
+    aId BIGINT UNSIGNED AUTO_INCREMENT,
+    qId BIGINT UNSIGNED REFERENCES Question,
+    text LONGTEXT,
+    PRIMARY KEY (aId)
+);
+
 -- Represents a category of items that can be auctioned.
 CREATE TABLE ItemCategory (
     name VARCHAR(255),
@@ -143,25 +158,7 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
-CREATE TRIGGER checkNewBid
-BEFORE INSERT ON Bid
-FOR EACH ROW
-BEGIN
-    SET
-	@maxBid = (SELECT MAX(amount) FROM Bid);
-    @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction)
-	@bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
-	
-    IF (NEW.amount < @initialPrice)
-    OR NEW.amount < @maxBid
-    OR NEW.amount - @initialPrice < @bidIncrement
-    OR NEW.amount - @maxBid < @bidIncrement
-    THEN
-        SET NEW.amount = NULL;
-    END IF;
-END;
-
-
+-- Trigger that removes messages sent by deleted users
 CREATE TRIGGER checkNullMessage
 BEFORE DELETE ON Account
 FOR EACH ROW

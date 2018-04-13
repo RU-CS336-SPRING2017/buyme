@@ -60,9 +60,26 @@ while (rs.next()) {
 	<%=field%>: <%=value%> <br><%
 }%>
 
-Description: <%=description%><%
+Description: <%=description%><br><br>
 
-con.close();%>
+<%rs = con.createStatement().executeQuery("SELECT * FROM Question WHERE id=" + id + ";");
+while (rs.next()) {%>
+Question: <%=rs.getString("text")%><br>
+	
+	<%ResultSet rs2 = con.createStatement().executeQuery("SELECT * FROM Answer WHERE qId=" + rs.getString("qId") + ";");
+	while(rs2.next()){%>
+Answer: <%=rs2.getString("text") %><br><%} %>
+
+<form action="/buyme/6/ReplyQ?qId=<%=rs.getString("qId")%>&aucId=<%=id%>&" method="post">
+<textarea required name="text" cols="35" rows="1"></textarea><br>
+<input type="submit" value="Reply"><br><br>
+</form>	
+<%}con.close();%>
+
+Ask a Question!<br>
+<form action="/buyme/6/SubmitQuestion?aucId=<%=id %>&" method="post">
+<textarea required name="text" cols="35" rows="1"></textarea><br>
+<input type="submit" value="Submit Question">
 
 </body>
 </html>

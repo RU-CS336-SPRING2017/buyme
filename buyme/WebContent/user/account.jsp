@@ -11,7 +11,7 @@
 
 <h1>Account</h1>
 
-<h3><%=request.getUserPrincipal().getName()%></h3><%
+<h3>You are <u><%=request.getUserPrincipal().getName()%>!</u></h3><%
 
 if(request.getParameter("removeError") != null) {%>
 	<p>Error creating auction: <%=request.getParameter("removeError")%></p><%

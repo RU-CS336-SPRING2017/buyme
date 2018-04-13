@@ -149,6 +149,22 @@ public class Database {
 					" VALUES (DEFAULT, '" + subject + "', '" + text + "', '" + dtf.format(now) + "', '" + sentBy + "', '" + receivedBy + "');");
 		con.close();
 	}
+	/**
+	 * Inserts a question into question table
+	 */
+	public void submitQuestion(String aucId, String text) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO Question (id, qId, text) VALUES (" + aucId + ", DEFAULT, '" + text + "');");
+		con.close();
+	}
+	/**
+	 * Inserts a answer into answer table
+	 */
+	public void replyQuestion(String qId, String text) throws SQLException {
+		Connection con = this.connect();
+		con.createStatement().execute("INSERT INTO Answer (aId, qId, text) VALUES (DEFAULT, " + qId + ", '"+ text + "');");
+		con.close();
+	}
 	public BigDecimal getCurrentBid(String auctionId) throws SQLException {
 		Connection con = this.connect();
 		con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
