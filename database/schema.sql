@@ -59,8 +59,8 @@ CREATE TABLE CategoryField (
         REFERENCES ItemCategory (name)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (subcategory)
-        REFERENCES ItemSubcategory (name)
+    FOREIGN KEY (subcategory, category)
+        REFERENCES ItemSubcategory (name, category)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
