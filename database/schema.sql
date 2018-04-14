@@ -32,22 +32,6 @@ CREATE TABLE Message (
         ON UPDATE CASCADE
 );
 
--- Stores inquiries about a particular auction
-CREATE TABLE Question (
-    id BIGINT UNSIGNED REFERENCES Auction,
-    qId BIGINT UNSIGNED AUTO_INCREMENT,
-    text LONGTEXT,
-    PRIMARY KEY(qId)
-);
-
--- Store answers to inquiries about a particular auction
-CREATE TABLE Answer (
-    aId BIGINT UNSIGNED AUTO_INCREMENT,
-    qId BIGINT UNSIGNED REFERENCES Question,
-    text LONGTEXT,
-    PRIMARY KEY (aId)
-);
-
 -- Represents a category of items that can be auctioned.
 CREATE TABLE ItemCategory (
     name VARCHAR(255),
@@ -107,6 +91,28 @@ CREATE TABLE Auction (
         ON UPDATE CASCADE
 );
 
+-- Stores inquiries about a particular auction
+CREATE TABLE Question (
+    id BIGINT UNSIGNED,
+    qId BIGINT UNSIGNED AUTO_INCREMENT,
+    text LONGTEXT,
+    PRIMARY KEY(qId),
+    FOREIGN KEY (id)
+		REFERENCES Auction (id)
+        ON DELETE CASCADE
+);
+
+-- Store answers to inquiries about a particular auction
+CREATE TABLE Answer (
+    aId BIGINT UNSIGNED AUTO_INCREMENT,
+    qId BIGINT UNSIGNED,
+    text LONGTEXT,
+    PRIMARY KEY (aId),
+	FOREIGN KEY (id)
+		REFERENCES Question (qId)
+        ON DELETE CASCADE
+);
+
 -- Holds data for required fields in auctions.
 CREATE TABLE AuctionField (
     auction BIGINT UNSIGNED,
@@ -159,29 +165,6 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
--- Trigger that removes messages sent by deleted users
-CREATE TRIGGER checkNullMessage
-BEFORE DELETE ON Account
-FOR EACH ROW
-	DELETE FROM Message 
-    WHERE Message.sentBy = OLD.username; 
-
--- Trigger that deletes questions when a particular 
--- auction is deleted
-CREATE TRIGGER qWOAuction
-BEFORE DELETE ON Auction
-FOR EACH ROW
-	DELETE FROM Question
-    WHERE Question.id = OLD.id;
-
--- Trigger that deletes answers to question which were
--- deleted because the auction was deleted
-CREATE TRIGGER aAWOQuestion
-BEFORE DELETE ON Question
-FOR EACH ROW
-	DELETE FROM Answer
-    WHERE Answer.qId = OLD.qId;
-    
 
 
 
