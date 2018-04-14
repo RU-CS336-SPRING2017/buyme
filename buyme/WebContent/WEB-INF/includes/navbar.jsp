@@ -14,6 +14,7 @@
 <%if (request.isUserInRole("user")) {%>
 <li><a href="/buyme/user/myAuctions.jsp">My Auctions</a></li>
 <li><a href="/buyme/user/account.jsp">Account</a></li>
+<li><a href="/buyme/user/alerts.jsp">Alerts</a></li>
 <%}%>
 
 

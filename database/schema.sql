@@ -160,6 +160,24 @@ CREATE TABLE Alert (
         ON UPDATE CASCADE
 );
 
+-- Represents a field for an alert
+CREATE TABLE AlertField (
+    user VARCHAR(255),
+    category VARCHAR(255),
+    subcategory VARCHAR(255),
+    field VARCHAR(255),
+    value VARCHAR(255) NOT NULL,
+    PRIMARY KEY (user, category, subcategory, field),
+    FOREIGN KEY (user, category, subcategory)
+        REFERENCES Alert (user, category, subcategory)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (field, category)
+        REFERENCES CategoryField (name, category)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 -- Makes sure new bids are higher then the
 -- current max bid or initial bid
 CREATE TRIGGER checkNewBid
