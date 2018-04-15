@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -50,7 +49,11 @@ public class CreateAuction extends HttpServlet {
 					"VALUES ('" + closeTime + "', " + initialPrice + ", " + bidIncrement + ", " + minimumPrice + ", '" + description + "', '" + auctioneer + "', '" + subcategory + "', '" + category + "', '" + title + "');"
 			);
 			
-			ResultSet rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
+			ResultSet rs = con.createStatement().executeQuery("SELECT LAST_INSERT_ID() id;");
+			rs.next();
+			long auctionId = rs.getLong("id");
+			
+			rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND (subcategory IS NULL OR subcategory='" + subcategory + "');");
 			
 			while (rs.next()) {
 				
@@ -59,8 +62,38 @@ public class CreateAuction extends HttpServlet {
 				
 				con.createStatement().executeUpdate( 
 						"INSERT INTO AuctionField (auction, field, category, value) \n" +
-						"VALUES (LAST_INSERT_ID(), '" + fieldName + "', '" + category + "', '" + fieldValue + "');"
+						"VALUES ("+auctionId+", '" + fieldName + "', '" + category + "', '" + fieldValue + "');"
 				);
+			}
+			
+			rs = con.createStatement().executeQuery("SELECT user FROM Alert WHERE category='"+category+"' AND subcategory='"+subcategory+"';");
+			
+			while (rs.next()) {
+				
+				String user = rs.getString("user");
+				String query =
+						"INSERT INTO Message (subject, text, sentBy, receivedBy) \n" + 
+						"VALUES ('"+subcategory+" Alert', 'Your alert for "+category+"/"+subcategory+" has been auctioned as <a href=\"/buyme/6/auction.jsp?id="+auctionId+"\">"+title+"</a>', 'admin', '"+user+"');";
+				
+				ResultSet rs2 = con.createStatement().executeQuery("SELECT field, value FROM AlertField WHERE user='"+user+"' AND category='"+category+"' AND subcategory='"+subcategory+"';");
+				
+				if (rs2.next()) {
+					
+					do {
+
+						String field = rs2.getString("field");
+						String alertValue = rs2.getString("value");
+						String insertValue = request.getParameter(field);
+						
+						if (alertValue.equals(insertValue)) {
+							con.createStatement().executeUpdate(query);
+						}
+						
+					} while (rs2.next());
+					
+				} else {
+					con.createStatement().executeUpdate(query);
+				}
 			}
 			
 			con.commit();
@@ -70,6 +103,7 @@ public class CreateAuction extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			try { if (con != null) { con.rollback(); } } catch (SQLException e1) {}
 			response.sendRedirect("/buyme/user/myAuctions.jsp?addError=" + title);
+			e.printStackTrace();
 			
 		} finally { try { if (con != null) { con.close(); } } catch (SQLException e) {} }
 	}
