@@ -86,13 +86,19 @@ public class CreateAuction extends HttpServlet {
 						String insertValue = request.getParameter(field);
 						
 						if (alertValue.equals(insertValue)) {
-							con.createStatement().executeUpdate(query);
+							con.createStatement().executeUpdate(
+								"INSERT INTO Message (subject, text, sentBy, receivedBy) \n" + 
+								"VALUES ('"+subcategory+" Alert', 'Your alert for "+category+"/"+subcategory+" has been auctioned as <a href=\"/buyme/6/auction.jsp?id="+auctionId+"\">"+title+"</a> where "+field+" = "+alertValue+"', 'admin', '"+user+"');"
+							);
 						}
 						
 					} while (rs2.next());
 					
 				} else {
-					con.createStatement().executeUpdate(query);
+					con.createStatement().executeUpdate(
+						"INSERT INTO Message (subject, text, sentBy, receivedBy) \n" + 
+						"VALUES ('"+subcategory+" Alert', 'Your alert for "+category+"/"+subcategory+" has been auctioned as <a href=\"/buyme/6/auction.jsp?id="+auctionId+"\">"+title+"</a>', 'admin', '"+user+"');"
+					);
 				}
 			}
 			

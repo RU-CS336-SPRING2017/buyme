@@ -166,8 +166,8 @@ CREATE TABLE AlertField (
     category VARCHAR(255),
     subcategory VARCHAR(255),
     field VARCHAR(255),
-    value VARCHAR(255) NOT NULL,
-    PRIMARY KEY (user, category, subcategory, field),
+    value VARCHAR(255),
+    PRIMARY KEY (user, category, subcategory, field, value),
     FOREIGN KEY (user, category, subcategory)
         REFERENCES Alert (user, category, subcategory)
         ON DELETE CASCADE
