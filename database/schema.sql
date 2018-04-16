@@ -242,7 +242,7 @@ BEGIN
         @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
         @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction),
         @newMaxBid = @maxBid + @bidIncrement;
-    IF NEW.max > @newMaxBid THEN
+    IF NEW.max >= @newMaxBid THEN
         INSERT INTO Bid (amount, bidder, auction)
         VALUES (@newMaxBid, NEW.bidder, NEW.auction);
     END IF;
