@@ -178,6 +178,14 @@ CREATE TABLE AlertField (
         ON UPDATE CASCADE
 );
 
+-- Represents a question
+CREATE TABLE Question (
+    id BIGINT AUTO_INCREMENT,
+    question LONGTEXT NOT NULL,
+    answer LONGTEXT,
+    PRIMARY KEY (id)
+);
+
 -- Makes sure new bids are higher then the
 -- current max bid or initial bid
 CREATE TRIGGER checkNewBid
