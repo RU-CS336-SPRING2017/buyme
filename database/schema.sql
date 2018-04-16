@@ -232,6 +232,48 @@ BEGIN
     );
 END;
 
+-- Notifies all auto bidders whos max bids
+-- were exceeded
+CREATE TRIGGER notifyAutoBidders
+AFTER INSERT ON Bid
+FOR EACH ROW
+BEGIN
+
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE autoBidder VARCHAR(255);
+    DECLARE autoBidMax DECIMAL(8,2);
+    DECLARE cur CURSOR FOR SELECT bidder, max FROM AutoBid
+        WHERE auction = NEW.auction AND max < NEW.amount;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    SET @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
+
+    OPEN cur;
+
+    message_loop: LOOP
+
+        FETCH cur INTO autoBidder, autoBidMax;
+
+        IF done THEN
+        LEAVE message_loop;
+        END IF;
+
+        START TRANSACTION;
+            INSERT INTO Message (subject, text, sentBy, receivedBy)
+            VALUES (
+                'Your max bid has been exceeded',
+                CONCAT(
+                    'Your max bid of $', autoBidMax,
+                    ' for the auction <a href="/buyme/6/auction.jsp?id=',
+                    NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+                ), 'admin', autoBidder
+            );
+            DELETE FROM AutoBid WHERE max=autoBidMax AND bidder=autoBidder AND auction=NEW.auction;
+        COMMIT;
+
+    END LOOP;
+    CLOSE cur;
+END;
+
 -- When a new auto bid is made, add a
 -- bid if the max is big enough
 CREATE TRIGGER bidOnAuto
@@ -240,8 +282,14 @@ FOR EACH ROW
 BEGIN
     SET
         @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @maxAutobid = (SELECT MAX(max) FROM AutoBid WHERE auction=NEW.auction),
         @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction),
-        @newMaxBid = @maxBid + @bidIncrement;
+        @initialPrice = (SELECT initialPrice from Auction WHERE id=NEW.auction);
+    IF @maxBid IS NULL THEN
+        SET @newMaxBid = @initialPrice + @bidIncrement;
+    ELSE
+        SET @newMaxBid = @maxBid + @bidIncrement;
+    END IF;
     IF NEW.max >= @newMaxBid THEN
         INSERT INTO Bid (amount, bidder, auction)
         VALUES (@newMaxBid, NEW.bidder, NEW.auction);
