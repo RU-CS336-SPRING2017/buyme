@@ -197,11 +197,26 @@ BEGIN
         @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
         @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
     IF NEW.amount < @initialPrice
-    OR NEW.amount < @maxBid
-    OR NEW.amount - @initialPrice < @bidIncrement
-    OR NEW.amount - @maxBid < @bidIncrement
+    OR NEW.amount < @maxBid + @bidIncrement
     THEN
         SET NEW.amount = NULL;
+    END IF;
+END;
+
+-- Makes sure new auto bids are higher then the
+-- current max bid or initial bid
+CREATE TRIGGER checkNewAutoBid
+BEFORE INSERT ON AutoBid
+FOR EACH ROW
+BEGIN
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
+    IF NEW.max < @initialPrice
+    OR NEW.max < @maxBid + @bidIncrement
+    THEN
+        SET NEW.bidder = NULL;
     END IF;
 END;
 
@@ -238,7 +253,6 @@ CREATE TRIGGER notifyAutoBidders
 AFTER INSERT ON Bid
 FOR EACH ROW
 BEGIN
-
     DECLARE done INT DEFAULT FALSE;
     DECLARE autoBidder VARCHAR(255);
     DECLARE autoBidMax DECIMAL(8,2);
@@ -246,17 +260,12 @@ BEGIN
         WHERE auction = NEW.auction AND max < NEW.amount;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     SET @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
-
     OPEN cur;
-
     message_loop: LOOP
-
         FETCH cur INTO autoBidder, autoBidMax;
-
         IF done THEN
         LEAVE message_loop;
         END IF;
-
         INSERT INTO Message (subject, text, sentBy, receivedBy)
         VALUES (
             'Your max bid has been exceeded',
@@ -265,32 +274,46 @@ BEGIN
                 ' for the auction <a href="/buyme/6/auction.jsp?id=',
                 NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
             ), 'admin', autoBidder
-        );
-        DELETE FROM AutoBid WHERE bidder=autoBidder AND auction=NEW.auction;
-        
+        ); 
     END LOOP;
     CLOSE cur;
 END;
 
--- When a new auto bid is made, add a
--- bid if the max is big enough
+-- When a new auto bid is made,
+-- insert the appropriate bid
 CREATE TRIGGER bidOnAuto
 AFTER INSERT ON AutoBid
 FOR EACH ROW
 BEGIN
     SET
-        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
-        @maxAutobid = (SELECT MAX(max) FROM AutoBid WHERE auction=NEW.auction),
         @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction),
-        @initialPrice = (SELECT initialPrice from Auction WHERE id=NEW.auction);
+        @initialPrice = (SELECT initialPrice from Auction WHERE id=NEW.auction),
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @maxAutobid = (SELECT MAX(max) FROM AutoBid WHERE auction=NEW.auction AND bidder<>NEW.bidder);
     IF @maxBid IS NULL THEN
-        SET @newMaxBid = @initialPrice + @bidIncrement;
+        SET @newMaxBid = @initialPrice, @bidder = NEW.bidder;
+    ELSEIF @maxAutobid IS NOT NULL THEN
+        IF @maxAutoBid >= NEW.max THEN
+            SET @bidder = (SELECT bidder FROM AutoBid WHERE max=@maxAutobid ORDER BY RAND() LIMIT 1);
+            IF @maxAutobid >= NEW.max + @bidIncrement THEN
+                SET @newMaxBid = NEW.max + @bidIncrement;
+            ELSE
+                SET @newMaxBid = @maxAutoBid;
+            END IF;
+        ELSEIF @maxAutoBid > @maxBid THEN
+            SET @bidder = NEW.bidder;
+            IF NEW.max >= @maxAutobid + @bidIncrement THEN
+                SET @newMaxBid = @maxAutobid + @bidIncrement;
+            ELSE
+                SET @newMaxBid = NEW.max;
+            END IF;
+        END IF;
     ELSE
-        SET @newMaxBid = @maxBid + @bidIncrement;
+        SET @newMaxBid = @maxBid + @bidIncrement, @bidder = NEW.bidder;
     END IF;
     IF NEW.max >= @newMaxBid THEN
         INSERT INTO Bid (amount, bidder, auction)
-        VALUES (@newMaxBid, NEW.bidder, NEW.auction);
+        VALUES (@newMaxBid, @bidder, NEW.auction);
     END IF;
 END;
 
