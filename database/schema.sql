@@ -266,7 +266,7 @@ BEGIN
                 NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
             ), 'admin', autoBidder
         );
-        DELETE FROM AutoBid WHERE max=autoBidMax AND bidder=autoBidder AND auction=NEW.auction;
+        DELETE FROM AutoBid WHERE bidder=autoBidder AND auction=NEW.auction;
         
     END LOOP;
     CLOSE cur;
