@@ -39,7 +39,7 @@ public class Bid extends HttpServlet {
 			if (type.equals("auto")) {
 				
 				con.createStatement().executeUpdate(
-						"INSERT INTO AutoBid (max, bidder, auction) \n" +
+						"REPLACE INTO AutoBid (max, bidder, auction) \n" +
 						"VALUES ('" + amount + "', '" + bidder + "', '" + auction + "');"
 					);
 				

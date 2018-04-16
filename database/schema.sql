@@ -129,10 +129,10 @@ CREATE TABLE Bid (
 -- Represent an automatic bid that is identified by the
 -- max amount, bidder, and auction.
 CREATE TABLE AutoBid (
-    max DECIMAL(8,2),
+    max DECIMAL(8,2) NOT NULL,
     bidder VARCHAR(255),
     auction BIGINT UNSIGNED,
-    PRIMARY KEY (max, bidder, auction),
+    PRIMARY KEY (bidder, auction),
     FOREIGN KEY (bidder)
         REFERENCES Account (username)
         ON DELETE CASCADE
@@ -257,19 +257,17 @@ BEGIN
         LEAVE message_loop;
         END IF;
 
-        START TRANSACTION;
-            INSERT INTO Message (subject, text, sentBy, receivedBy)
-            VALUES (
-                'Your max bid has been exceeded',
-                CONCAT(
-                    'Your max bid of $', autoBidMax,
-                    ' for the auction <a href="/buyme/6/auction.jsp?id=',
-                    NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
-                ), 'admin', autoBidder
-            );
-            DELETE FROM AutoBid WHERE max=autoBidMax AND bidder=autoBidder AND auction=NEW.auction;
-        COMMIT;
-
+        INSERT INTO Message (subject, text, sentBy, receivedBy)
+        VALUES (
+            'Your max bid has been exceeded',
+            CONCAT(
+                'Your max bid of $', autoBidMax,
+                ' for the auction <a href="/buyme/6/auction.jsp?id=',
+                NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+            ), 'admin', autoBidder
+        );
+        DELETE FROM AutoBid WHERE max=autoBidMax AND bidder=autoBidder AND auction=NEW.auction;
+        
     END LOOP;
     CLOSE cur;
 END;
