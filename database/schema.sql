@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS buymeDB;
-CREATE DATABASE buymeDB;
-USE buymeDB;
+DROP DATABASE IF EXISTS BuyMe;
+CREATE DATABASE BuyMe;
+USE BuyMe;
 
 -- Represents an account that can either be an
 -- admin, customer rep, or user.
@@ -18,7 +18,7 @@ CREATE TABLE Message (
     id BIGINT UNSIGNED AUTO_INCREMENT,
     subject VARCHAR(255) NOT NULL,
     text LONGTEXT,
-    dateTime VARCHAR(32) NOT NULL,
+    dateTime DATETIME NOT NULL DEFAULT NOW(),
     sentBy VARCHAR(255),
     receivedBy VARCHAR(255),
     PRIMARY KEY (id),
@@ -59,8 +59,8 @@ CREATE TABLE CategoryField (
         REFERENCES ItemCategory (name)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (subcategory)
-        REFERENCES ItemSubcategory (name)
+    FOREIGN KEY (subcategory, category)
+        REFERENCES ItemSubcategory (name, category)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -70,7 +70,7 @@ CREATE TABLE CategoryField (
 -- auction has a unique ID.
 CREATE TABLE Auction (
     id BIGINT UNSIGNED AUTO_INCREMENT,
-    openTime DATETIME NOT NULL,
+    openTime DATETIME NOT NULL DEFAULT NOW(),
     closeTime DATETIME NOT NULL,
     initialPrice DECIMAL(8,2) NOT NULL,
     bidIncrement DECIMAL(8,2) NOT NULL,
@@ -89,28 +89,6 @@ CREATE TABLE Auction (
         REFERENCES ItemSubcategory (name, category)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-);
-
--- Stores inquiries about a particular auction
-CREATE TABLE Question (
-    id BIGINT UNSIGNED,
-    qId BIGINT UNSIGNED AUTO_INCREMENT,
-    text LONGTEXT,
-    PRIMARY KEY(qId),
-    FOREIGN KEY (id)
-		REFERENCES Auction (id)
-        ON DELETE CASCADE
-);
-
--- Store answers to inquiries about a particular auction
-CREATE TABLE Answer (
-    aId BIGINT UNSIGNED AUTO_INCREMENT,
-    qId BIGINT UNSIGNED,
-    text LONGTEXT,
-    PRIMARY KEY (aId),
-	FOREIGN KEY (id)
-		REFERENCES Question (qId)
-        ON DELETE CASCADE
 );
 
 -- Holds data for required fields in auctions.
@@ -133,7 +111,7 @@ CREATE TABLE AuctionField (
 -- Represent a bid that is identified by the
 -- amount, bidder, and auction.
 CREATE TABLE Bid (
-    dateTime DATETIME NOT NULL,
+    dateTime DATETIME NOT NULL DEFAULT NOW(),
     amount DECIMAL(8,2),
     bidder VARCHAR(255) NOT NULL,
     auction BIGINT UNSIGNED,
@@ -151,10 +129,10 @@ CREATE TABLE Bid (
 -- Represent an automatic bid that is identified by the
 -- max amount, bidder, and auction.
 CREATE TABLE AutoBid (
-    max DECIMAL(8,2),
+    max DECIMAL(8,2) NOT NULL,
     bidder VARCHAR(255),
     auction BIGINT UNSIGNED,
-    PRIMARY KEY (max, bidder, auction),
+    PRIMARY KEY (bidder, auction),
     FOREIGN KEY (bidder)
         REFERENCES Account (username)
         ON DELETE CASCADE
@@ -165,8 +143,164 @@ CREATE TABLE AutoBid (
         ON UPDATE CASCADE
 );
 
+-- Represents an alert a user makes on a
+-- subcategory
+CREATE TABLE Alert (
+    user VARCHAR(255),
+    category VARCHAR(255),
+    subcategory VARCHAR(255),
+    PRIMARY KEY (user, category, subcategory),
+    FOREIGN KEY (user)
+        REFERENCES Account (username)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (category, subcategory)
+        REFERENCES ItemSubcategory (category, name)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
+-- Represents a field for an alert
+CREATE TABLE AlertField (
+    user VARCHAR(255),
+    category VARCHAR(255),
+    subcategory VARCHAR(255),
+    field VARCHAR(255),
+    value VARCHAR(255),
+    PRIMARY KEY (user, category, subcategory, field, value),
+    FOREIGN KEY (user, category, subcategory)
+        REFERENCES Alert (user, category, subcategory)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (field, category)
+        REFERENCES CategoryField (name, category)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
 
+-- Represents a question
+CREATE TABLE Question (
+    id BIGINT AUTO_INCREMENT,
+    question LONGTEXT NOT NULL,
+    answer LONGTEXT,
+    PRIMARY KEY (id)
+);
 
+-- Makes sure new bids are higher then the
+-- current max bid or initial bid
+CREATE TRIGGER checkNewBid
+BEFORE INSERT ON Bid
+FOR EACH ROW
+BEGIN
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @initialPrice = (SELECT initialPrice FROM Auction WHERE id=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction);
+    IF NEW.amount < @initialPrice
+    OR NEW.amount < @maxBid
+    OR NEW.amount - @initialPrice < @bidIncrement
+    OR NEW.amount - @maxBid < @bidIncrement
+    THEN
+        SET NEW.amount = NULL;
+    END IF;
+END;
 
+-- Notify old winners when their bid
+-- has been exceeded
+CREATE TRIGGER notifyOldWinner
+AFTER INSERT ON Bid
+FOR EACH ROW
+BEGIN
+    SET
+        @oldMaxBid = (
+            SELECT MAX(amount) FROM Bid 
+            WHERE auction=NEW.auction AND amount <> NEW.amount
+        ),
+        @oldWinner = (
+            SELECT bidder FROM Bid
+            WHERE auction=NEW.auction AND amount=@oldMaxBid
+        ),
+        @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
+    INSERT INTO Message (subject, text, sentBy, receivedBy)
+    VALUES (
+        'Your bid has been exceeded',
+        CONCAT(
+            'Your winning bid of $', @oldMaxBid,
+            ' for the auction <a href="/buyme/6/auction.jsp?id=',
+            NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+        ), 'admin', @oldWinner
+    );
+END;
 
+-- Notifies all auto bidders whos max bids
+-- were exceeded
+CREATE TRIGGER notifyAutoBidders
+AFTER INSERT ON Bid
+FOR EACH ROW
+BEGIN
+
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE autoBidder VARCHAR(255);
+    DECLARE autoBidMax DECIMAL(8,2);
+    DECLARE cur CURSOR FOR SELECT bidder, max FROM AutoBid
+        WHERE auction = NEW.auction AND max < NEW.amount;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    SET @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
+
+    OPEN cur;
+
+    message_loop: LOOP
+
+        FETCH cur INTO autoBidder, autoBidMax;
+
+        IF done THEN
+        LEAVE message_loop;
+        END IF;
+
+        INSERT INTO Message (subject, text, sentBy, receivedBy)
+        VALUES (
+            'Your max bid has been exceeded',
+            CONCAT(
+                'Your max bid of $', autoBidMax,
+                ' for the auction <a href="/buyme/6/auction.jsp?id=',
+                NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+            ), 'admin', autoBidder
+        );
+        DELETE FROM AutoBid WHERE bidder=autoBidder AND auction=NEW.auction;
+        
+    END LOOP;
+    CLOSE cur;
+END;
+
+-- When a new auto bid is made, add a
+-- bid if the max is big enough
+CREATE TRIGGER bidOnAuto
+AFTER INSERT ON AutoBid
+FOR EACH ROW
+BEGIN
+    SET
+        @maxBid = (SELECT MAX(amount) FROM Bid WHERE auction=NEW.auction),
+        @maxAutobid = (SELECT MAX(max) FROM AutoBid WHERE auction=NEW.auction),
+        @bidIncrement = (SELECT bidIncrement FROM Auction WHERE id=NEW.auction),
+        @initialPrice = (SELECT initialPrice from Auction WHERE id=NEW.auction);
+    IF @maxBid IS NULL THEN
+        SET @newMaxBid = @initialPrice + @bidIncrement;
+    ELSE
+        SET @newMaxBid = @maxBid + @bidIncrement;
+    END IF;
+    IF NEW.max >= @newMaxBid THEN
+        INSERT INTO Bid (amount, bidder, auction)
+        VALUES (@newMaxBid, NEW.bidder, NEW.auction);
+    END IF;
+END;
+
+-- Only allow new auctions where the close time
+-- hasn't already passed
+CREATE TRIGGER checkAuctionCloseTime
+BEFORE INSERT ON Auction
+FOR EACH ROW
+BEGIN
+    IF NEW.closeTime < NOW() THEN
+        SET NEW.id = 'string';
+    END IF;
+END
