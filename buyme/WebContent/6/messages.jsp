@@ -28,7 +28,7 @@ if (sendError != null) {%>
 	<p>Error sending message to <%=sendError%></p><%
 }%>
 
-<a href="/buyme/6/compose.jsp"><input type="button" value="Compse message"></a><%
+<a href="/buyme/6/compose.jsp"><input type="button" value="Compose message"></a><%
 
 if (inbox) {%>
 	<p><a href="/buyme/6/messages.jsp?outbox">Outbox</a></p>
