@@ -91,10 +91,10 @@ while (rs.next()) {
 		<tr>
 			<td><%=question%></td>
 			<td><%
-				if (isUser) {%> <td><%=question%></td> <%} else if (isCustomerRep) {%> 
+				if (isUser) {%><%=answer%><%} else if (isCustomerRep) {%> 
 					<form action="/buyme/customerRep/AnswerQuestion" method="post">
 						<input type="hidden" name="id" value="<%=id%>">
-						<textarea name="answer" value="<%=answer%>"></textarea>
+						<textarea name="answer"><%=answer%></textarea>
 						<input type="submit" value="Update">
 					</form><%
 				}%>
