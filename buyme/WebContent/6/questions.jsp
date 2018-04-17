@@ -7,7 +7,8 @@
 Connection con = new Database().connect();
 ResultSet rs = null;
 boolean isUser = request.isUserInRole("user");
-boolean isCustomerRep = request.isUserInRole("customerRep");%>
+boolean isCustomerRep = request.isUserInRole("customerRep");
+String search = request.getParameter("search");%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -18,7 +19,12 @@ boolean isCustomerRep = request.isUserInRole("customerRep");%>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
 
-<h1>Questions</h1><%
+<h1>Questions</h1>
+
+<form action="/buyme/6/questions.jsp" method="get">
+	<label>Search <input type="text" name="search"></label>
+	<input type="submit" value="search">
+</form><%
 
 if (isUser) {
 	if (request.getParameter("askError") != null) {%>
@@ -55,17 +61,20 @@ while (rs.next()) {
 	String question = rs.getString("question");
 	long id = rs.getLong("id");
 	
-	if (isUser) {%> <li><%=question%></li> <%} else if (isCustomerRep) {%> 
-		<tr>
-			<td><%=question%></td>
-			<td>
-				<form action="/buyme/customerRep/AnswerQuestion" method="post">
-					<input type="hidden" name="id" value="<%=id%>">
-					<textarea name="answer"></textarea>
-					<input type="submit" value="Answer">
-				</form>
-			</td>
-		</tr><%
+	if (search == null || question.toLowerCase().contains(search.toLowerCase())) {
+		
+		if (isUser) {%> <li><%=question%></li> <%} else if (isCustomerRep) {%> 
+			<tr>
+				<td><%=question%></td>
+				<td>
+					<form action="/buyme/customerRep/AnswerQuestion" method="post">
+						<input type="hidden" name="id" value="<%=id%>">
+						<textarea name="answer"></textarea>
+						<input type="submit" value="Answer">
+					</form>
+				</td>
+			</tr><%
+		}
 	}
 }%>
 	
@@ -86,20 +95,23 @@ while (rs.next()) {
 		
 		String question = rs.getString("question");
 		String answer = rs.getString("answer");
-		long id = rs.getLong("id");%>
+		long id = rs.getLong("id");
 		
-		<tr>
-			<td><%=question%></td>
-			<td><%
-				if (isUser) {%><%=answer%><%} else if (isCustomerRep) {%> 
-					<form action="/buyme/customerRep/AnswerQuestion" method="post">
-						<input type="hidden" name="id" value="<%=id%>">
-						<textarea name="answer"><%=answer%></textarea>
-						<input type="submit" value="Update">
-					</form><%
-				}%>
-			</td>
-		</tr><%
+		if (search == null || question.toLowerCase().contains(search.toLowerCase())) {%>
+		
+			<tr>
+				<td><%=question%></td>
+				<td><%
+					if (isUser) {%><%=answer%><%} else if (isCustomerRep) {%> 
+						<form action="/buyme/customerRep/AnswerQuestion" method="post">
+							<input type="hidden" name="id" value="<%=id%>">
+							<textarea name="answer"><%=answer%></textarea>
+							<input type="submit" value="Update">
+						</form><%
+					}%>
+				</td>
+			</tr><%
+		}
 	}%>
 	
 </table>

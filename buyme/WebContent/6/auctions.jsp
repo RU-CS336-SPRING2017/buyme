@@ -42,7 +42,7 @@
 <p>
 	<form action="/buyme/6/auctions.jsp" method="get">
 		<select name="subcategory">
-			<option value="">Subcategory</option>
+			<option value="">Category</option>
 			<%
 			rs = con.createStatement().executeQuery("SELECT * FROM ItemSubcategory;");
 			while (rs.next()) {
