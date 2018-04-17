@@ -81,6 +81,7 @@ CREATE TABLE Auction (
     category VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
     winner VARCHAR(255),
+    winningBid DECIMAL(8,2),
     PRIMARY KEY (id),
     FOREIGN KEY (auctioneer)
         REFERENCES Account (username)
@@ -356,7 +357,7 @@ DO BEGIN
             @winner = (SELECT bidder FROM Bid WHERE auction=auctionId AND amount=@winnerBid);
         IF @winnerBid IS NOT NULL THEN
             IF auctionMinimumPrice IS NULL OR @winnerBid > auctionMinimumPrice THEN
-                UPDATE Auction SET winner=@winner WHERE id=auctionId;
+                UPDATE Auction SET winner=@winner, winningBid=@winnerBid WHERE id=auctionId;
             ELSE
                 INSERT INTO Message (subject, text, sentBy, receivedBy)
                 VALUES ('Your Auction Ended', CONCAT('The minimum price for your auction ', auctionTitle, ' was not reached.'), 'admin', auctionAuctioneer);
