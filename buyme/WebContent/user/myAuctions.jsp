@@ -24,6 +24,8 @@ if(request.getParameter("removeError") != null) {%>
 	<p>Error removing auction with ID: <%=request.getParameter("removeError")%></p><%
 }%>
 
+<h3>Current Auctions</h3>
+
 <table>
 
 	<tr>
@@ -34,7 +36,7 @@ if(request.getParameter("removeError") != null) {%>
 	
 Database db = new Database();
 Connection con = db.connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE auctioneer='" + request.getUserPrincipal().getName() + "';");
+ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE auctioneer='" + request.getUserPrincipal().getName() + "' AND winner IS NULL;");
 
 while (rs.next()) {
 	String id = rs.getString("id");
@@ -50,9 +52,76 @@ while (rs.next()) {
 	</tr><%
 }%>
 
-</table><%
+</table>
 
-con.close();%>
+<hr>
+
+<h3>Auctions Sold</h3>
+
+<table>
+
+	<tr>
+		<th>ID</th>
+		<th>Title</th>
+		<th>Close time</th>
+		<th>Winner</th>
+	</tr><%
+	
+rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE auctioneer='" + request.getUserPrincipal().getName() + "' AND winner IS NOT NULL;");
+
+while (rs.next()) {
+	String id = rs.getString("id");
+	String title = rs.getString("title");
+	String category = rs.getString("category");
+	String subcategory = rs.getString("subcategory");
+	String winner = rs.getString("winner");
+	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));%>
+
+	<tr>
+		<td><%=id%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></td>
+		<td><%=closeTime%></td>
+		<td><%=winner%></td>
+	</tr><%
+}%>
+
+</table>
+
+<hr>
+
+<h3>Auctions Won</h3>
+
+<table>
+
+	<tr>
+		<th>ID</th>
+		<th>Title</th>
+		<th>Close time</th>
+		<th>Price</th>
+	</tr><%
+	
+rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE winner='" + request.getUserPrincipal().getName() + "';");
+
+while (rs.next()) {
+	String id = rs.getString("id");
+	String title = rs.getString("title");
+	String category = rs.getString("category");
+	String subcategory = rs.getString("subcategory");
+	String winner = rs.getString("winner");
+	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
+	String price = db.getCurrentBid(id);%>
+
+	<tr>
+		<td><%=id%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></td>
+		<td><%=closeTime%></td>
+		<td><%=price%></td>
+	</tr><%
+}%>
+
+</table>
 
 </body>
-</html>
+</html><%
+
+con.close();%>

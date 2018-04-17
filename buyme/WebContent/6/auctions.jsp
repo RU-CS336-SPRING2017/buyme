@@ -28,7 +28,7 @@ if(request.getParameter("removeError") != null) {%>
 	
 Database db = new Database();
 Connection con = db.connect();
-ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction;");
+ResultSet rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE winner IS NULL;");
 
 while (rs.next()) {
 	String id = rs.getString("id");

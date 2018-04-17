@@ -80,6 +80,7 @@ CREATE TABLE Auction (
     subcategory VARCHAR(255) NOT NULL,
     category VARCHAR(255) NOT NULL,
     title VARCHAR(255) NOT NULL,
+    winner VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (auctioneer)
         REFERENCES Account (username)
@@ -87,6 +88,10 @@ CREATE TABLE Auction (
         ON UPDATE CASCADE,
     FOREIGN KEY (subcategory, category)
         REFERENCES ItemSubcategory (name, category)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (winner)
+        REFERENCES Account (username)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -351,19 +356,17 @@ DO BEGIN
             @winner = (SELECT bidder FROM Bid WHERE auction=auctionId AND amount=@winnerBid);
         IF @winnerBid IS NOT NULL THEN
             IF auctionMinimumPrice IS NULL OR @winnerBid > auctionMinimumPrice THEN
-                INSERT INTO Message (subject, text, sentBy, receivedBy)
-                VALUES ('You Won!', CONCAT('You won the auction ', auctionTitle, ' for $', @winnerBid, '.'), 'admin', @winner);
-                INSERT INTO Message (subject, text, sentBy, receivedBy)
-                VALUES ('Your Auction Ended', CONCAT('Your auction ', auctionTitle, ' ended for $', @winnerBid, '.'), 'admin', auctionAuctioneer);
+                UPDATE Auction SET winner=@winner WHERE id=auctionId;
             ELSE
                 INSERT INTO Message (subject, text, sentBy, receivedBy)
                 VALUES ('Your Auction Ended', CONCAT('The minimum price for your auction ', auctionTitle, ' was not reached.'), 'admin', auctionAuctioneer);
+                DELETE FROM Auction WHERE id=auctionId;
             END IF;
         ELSE
             INSERT INTO Message (subject, text, sentBy, receivedBy)
-            VALUES ('Your Auction Ended', CONCAT('Noone bidded on your auction ', auctionTitle, '.'), 'admin', auctionAuctioneer);
+            VALUES ('Your Auction Ended', CONCAT('No one bidded on your auction ', auctionTitle, '.'), 'admin', auctionAuctioneer);
+            DELETE FROM Auction WHERE id=auctionId;
         END IF;
-        DELETE FROM Auction WHERE id=auctionId;
     END LOOP;
     CLOSE cur;
 END;

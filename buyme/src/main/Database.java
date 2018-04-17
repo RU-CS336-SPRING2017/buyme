@@ -110,22 +110,13 @@ public class Database {
 		con.close();
 	}
 	
-	public BigDecimal getCurrentBid(String auctionId) throws SQLException {
+	public String getCurrentBid(String auctionId) throws SQLException {
 		Connection con = this.connect();
-		con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-		con.setAutoCommit(false);
-		ResultSet rs = con.createStatement().executeQuery("SELECT initialPrice FROM Auction WHERE id =" + auctionId);
+		String ret = "No bids";
+		ResultSet rs = con.createStatement().executeQuery("SELECT MAX(amount) max FROM Bid WHERE auction=" + auctionId);
 		rs.next();
-		BigDecimal ret = rs.getBigDecimal("initialPrice");
-		rs = con.createStatement().executeQuery("SELECT MAX(amount) max FROM Bid WHERE auction=" + auctionId);
-		rs.next();
-		BigDecimal maxBid = rs.getBigDecimal("max");
-		if (maxBid != null) {
-			if (maxBid.compareTo(ret) > 0) {
-				ret = maxBid;
-			}
-		}
-		con.commit();
+		String price = rs.getString("max");
+		if (price != null) ret = "$" + price;
 		con.close();
 		return ret;
 	}

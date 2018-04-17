@@ -25,7 +25,8 @@ try {
 	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
 	String description = rs.getString("description");
 	String auctioneer = rs.getString("auctioneer");
-	String bidIncrement = rs.getString("bidIncrement");%>
+	String bidIncrement = rs.getString("bidIncrement");
+	String winner = rs.getString("winner");%>
 	
 	<title><%=title%></title>
 	</head>
@@ -34,12 +35,15 @@ try {
 	
 	<h1><%=title%></h1><%
 	
-	if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInRole("customerRep")) {%>
-		<p><a href="/buyme/6/RemoveAuction?id=<%=id%>"><input type="button" value="Remove auction"></a></p><%
-	}
+	if (winner == null) {
 	
-	if (request.isUserInRole("user")) {%>
-		<p><a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a></p><%
+		if (request.getUserPrincipal().getName().equals(auctioneer) || request.isUserInRole("customerRep")) {%>
+			<p><a href="/buyme/6/RemoveAuction?id=<%=id%>"><input type="button" value="Remove auction"></a></p><%
+		}
+		
+		if (request.isUserInRole("user")) {%>
+			<p><a href="/buyme/user/bid.jsp?auction=<%=id%>"><input type="button" value="Bid"></a></p><%
+		}
 	}
 	
 	String bidError = request.getParameter("bidError");
@@ -48,7 +52,7 @@ try {
 	}%>
 	
 	<p>
-		Current bid: $<%=db.getCurrentBid(id)%> <br>
+		Current bid: <%=db.getCurrentBid(id)%> <br>
 		<a href="/buyme/6/bids.jsp?auction=<%=id%>">Bid history</a>
 	</p>
 	
