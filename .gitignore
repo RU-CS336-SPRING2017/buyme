@@ -9,10 +9,10 @@ buyme/build
 buyme/WebContent/META-INF
 buyme/WebContent/WEB-INF/lib
 buyme.war
-apache-tomcat-9.0.6/*
-!apache-tomcat-9.0.6/conf
-apache-tomcat-9.0.6/conf/*
-!apache-tomcat-9.0.6/conf/server.xml
-!apache-tomcat-9.0.6/lib
-apache-tomcat-9.0.6/lib/*
-!apache-tomcat-9.0.6/lib/mysql-5.1.46-connector_goes_here
+apache-tomcat-9.0.7/*
+!apache-tomcat-9.0.7/conf
+apache-tomcat-9.0.7/conf/*
+!apache-tomcat-9.0.7/conf/server.xml
+!apache-tomcat-9.0.7/lib
+apache-tomcat-9.0.7/lib/*
+!apache-tomcat-9.0.7/lib/mysql-5.1.46-connector_goes_here
