@@ -336,6 +336,8 @@ BEGIN
     END IF;
 END;
 
+-- An event that runs each second
+-- and ends auctions that have expired
 CREATE EVENT auctionEnder
 ON SCHEDULE EVERY 1 SECOND
 DO BEGIN
