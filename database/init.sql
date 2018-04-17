@@ -6,7 +6,7 @@ INSERT INTO Account (username, password, type)
 VALUES ('admin', 'admin', 'admin');
 
 INSERT INTO Account (username, password, type)
-VALUES ('rep', 'Rep1', 'buyme1');
+VALUES ('Rep1', 'buyme1', 'customerRep');
 
 INSERT INTO Account (username, password, type)
 VALUES ('User1', 'pass18', 'user');
