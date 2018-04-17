@@ -236,15 +236,17 @@ BEGIN
             WHERE auction=NEW.auction AND amount=@oldMaxBid
         ),
         @auctionTitle = (SELECT title FROM Auction WHERE id=NEW.auction);
-    INSERT INTO Message (subject, text, sentBy, receivedBy)
-    VALUES (
-        'Your bid has been exceeded',
-        CONCAT(
-            'Your winning bid of $', @oldMaxBid,
-            ' for the auction <a href="/buyme/6/auction.jsp?id=',
-            NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
-        ), 'admin', @oldWinner
-    );
+    IF @oldMaxBid IS NOT NULL THEN
+        INSERT INTO Message (subject, text, sentBy, receivedBy)
+        VALUES (
+            'Your bid has been exceeded',
+            CONCAT(
+                'Your winning bid of $', @oldMaxBid,
+                ' for the auction <a href="/buyme/6/auction.jsp?id=',
+                NEW.auction, '">', @auctionTitle, '</a> has been exceeded.'
+            ), 'admin', @oldWinner
+        );
+    END IF;
 END;
 
 -- Notifies all auto bidders whos max bids
@@ -326,4 +328,42 @@ BEGIN
     IF NEW.closeTime < NOW() THEN
         SET NEW.id = 'string';
     END IF;
+END;
+
+CREATE EVENT auctionEnder
+ON SCHEDULE EVERY 1 SECOND
+DO BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE auctionId BIGINT UNSIGNED;
+    DECLARE auctionTitle VARCHAR(255);
+    DECLARE auctionMinimumPrice DECIMAL(8,2);
+    DECLARE auctionAuctioneer VARCHAR(255);
+    DECLARE cur CURSOR FOR SELECT id, title, minimumPrice, auctioneer FROM Auction WHERE closeTime <= NOW();
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    OPEN cur;
+    handle_loop: LOOP
+        FETCH cur INTO auctionId, auctionTitle, auctionMinimumPrice, auctionAuctioneer;
+        IF done THEN
+        LEAVE handle_loop;
+        END IF;
+        SET
+            @winnerBid = (SELECT MAX(amount) FROM Bid WHERE auction=auctionId),
+            @winner = (SELECT bidder FROM Bid WHERE auction=auctionId AND amount=@winnerBid);
+        IF @winnerBid IS NOT NULL THEN
+            IF auctionMinimumPrice IS NULL OR @winnerBid > auctionMinimumPrice THEN
+                INSERT INTO Message (subject, text, sentBy, receivedBy)
+                VALUES ('You Won!', CONCAT('You won the auction ', auctionTitle, ' for $', @winnerBid, '.'), 'admin', @winner);
+                INSERT INTO Message (subject, text, sentBy, receivedBy)
+                VALUES ('Your Auction Ended', CONCAT('Your auction ', auctionTitle, ' ended for $', @winnerBid, '.'), 'admin', auctionAuctioneer);
+            ELSE
+                INSERT INTO Message (subject, text, sentBy, receivedBy)
+                VALUES ('Your Auction Ended', CONCAT('The minimum price for your auction ', auctionTitle, ' was not reached.'), 'admin', auctionAuctioneer);
+            END IF;
+        ELSE
+            INSERT INTO Message (subject, text, sentBy, receivedBy)
+            VALUES ('Your Auction Ended', CONCAT('Noone bidded on your auction ', auctionTitle, '.'), 'admin', auctionAuctioneer);
+        END IF;
+        DELETE FROM Auction WHERE id=auctionId;
+    END LOOP;
+    CLOSE cur;
 END;
