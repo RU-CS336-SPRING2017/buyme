@@ -69,7 +69,28 @@ if (category == null) {%>
 		<input type="hidden" value="<%=subcategory%>" name="subcategory">
 		<input type="submit" value="Create">
 	
-	</form><%
+	</form>
+	
+	<h3>Similar Items</h3>
+	
+	<table>
+		<tr>
+			<th>Title</th>
+			<th>Price Sold</th>
+		</tr><%
+		rs = con.createStatement().executeQuery("SELECT * FROM Auction WHERE category='"+category+"' AND subcategory='"+subcategory+"' AND TIMESTAMPDIFF(MONTH, closeTime, NOW())=0 AND winner IS NOT NULL;");
+		while (rs.next()) {
+			
+			String title = rs.getString("title");
+			String id = rs.getString("id");
+			String price = "$" + rs.getString("winningBid");
+			%>
+			<tr>
+				<td><%=title%></td>
+				<td><%=price%></td>
+			</tr><%
+		}%>
+	</table><%
 }
 
 con.close();%>
