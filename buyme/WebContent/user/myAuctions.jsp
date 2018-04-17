@@ -47,7 +47,7 @@ while (rs.next()) {
 
 	<tr>
 		<td><%=id%></td>
-		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></a></td>
 		<td><%=closeTime%></td>
 	</tr><%
 }%>
@@ -79,7 +79,7 @@ while (rs.next()) {
 
 	<tr>
 		<td><%=id%></td>
-		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></a></td>
 		<td><%=closeTime%></td>
 		<td><%=winner%></td>
 	</tr><%
@@ -113,9 +113,39 @@ while (rs.next()) {
 
 	<tr>
 		<td><%=id%></td>
-		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></a></td>
 		<td><%=closeTime%></td>
 		<td>$<%=price%></td>
+	</tr><%
+}%>
+
+</table>
+
+<hr>
+
+<h3>Participated Auctions</h3>
+
+<table>
+
+	<tr>
+		<th>ID</th>
+		<th>Title</th>
+	</tr><%
+	
+rs = con.createStatement().executeQuery("SELECT * FROM Auction NATURAL JOIN (SELECT DISTINCT auction id FROM Bid WHERE bidder='" + request.getUserPrincipal().getName() + "') AS t1;");
+
+while (rs.next()) {
+	String id = rs.getString("id");
+	String title = rs.getString("title");
+	String category = rs.getString("category");
+	String subcategory = rs.getString("subcategory");
+	String winner = rs.getString("winner");
+	String closeTime = Database.timestampString(rs.getTimestamp("closeTime"));
+	String price = rs.getString("winningBid");%>
+
+	<tr>
+		<td><%=id%></td>
+		<td><a href="/buyme/6/auction.jsp?id=<%=id%>"><%=title%></a></td>
 	</tr><%
 }%>
 
