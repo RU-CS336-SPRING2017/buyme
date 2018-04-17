@@ -1,5 +1,7 @@
 USE BuyMe;
 
+START TRANSACTION;
+
 -- Adding accounts
 
 INSERT INTO Account (username, password, type)
@@ -20,10 +22,10 @@ INSERT INTO ItemSubcategory (name, category)
 VALUES ('Desktops', 'Computers');
 
 INSERT INTO ItemSubcategory (name, category)
-VALUES ('Laptop', 'Computers');
+VALUES ('Laptops', 'Computers');
 
 INSERT INTO ItemSubcategory (name, category)
-VALUES ('Tablet', 'Computers');
+VALUES ('Tablets', 'Computers');
 
 -- Adding fields for categories
 
@@ -37,7 +39,9 @@ INSERT INTO CategoryField (name, category)
 VALUES ('Memory', 'Computers');
 
 INSERT INTO CategoryField (name, category, subcategory)
-VALUES ('Screen Size', 'Computers', 'Tablet');
+VALUES ('Screen Size', 'Computers', 'Tablets');
 
 INSERT INTO CategoryField (name, category, subcategory)
-VALUES ('Power Supply', 'Computers', 'Desktop');
+VALUES ('Power Supply', 'Computers', 'Desktops');
+
+COMMIT;
