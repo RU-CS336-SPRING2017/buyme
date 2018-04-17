@@ -1,28 +1,43 @@
 USE BuyMe;
 
+-- Adding accounts
+
 INSERT INTO Account (username, password, type)
 VALUES ('admin', 'admin', 'admin');
 
 INSERT INTO Account (username, password, type)
-VALUES ('rep', 'rep', 'customerRep');
+VALUES ('rep', 'Rep1', 'buyme1');
 
 INSERT INTO Account (username, password, type)
-VALUES ('fun', 'time', 'user');
+VALUES ('User1', 'pass18', 'user');
 
-INSERT INTO Account (username, password, type)
-VALUES ('hey', 'there', 'user');
+-- Adding categories
 
 INSERT INTO ItemCategory (name)
-VALUES ('Drank');
+VALUES ('Computers');
 
 INSERT INTO ItemSubcategory (name, category)
-VALUES ('Wine', 'Drank');
+VALUES ('Desktops', 'Computers');
 
 INSERT INTO ItemSubcategory (name, category)
-VALUES ('Juice', 'Drank');
+VALUES ('Laptop', 'Computers');
 
 INSERT INTO ItemSubcategory (name, category)
-VALUES ('Soda', 'Drank');
+VALUES ('Tablet', 'Computers');
+
+-- Adding fields for categories
+
+INSERT INTO CategoryField (name, category)
+VALUES ('Processor', 'Computers');
+
+INSERT INTO CategoryField (name, category)
+VALUES ('GPU', 'Computers');
+
+INSERT INTO CategoryField (name, category)
+VALUES ('Memory', 'Computers');
 
 INSERT INTO CategoryField (name, category, subcategory)
-VALUES ('Fizz Level', 'Drank', 'Soda');
+VALUES ('Screen Size', 'Computers', 'Tablet');
+
+INSERT INTO CategoryField (name, category, subcategory)
+VALUES ('Power Supply', 'Computers', 'Desktop');
