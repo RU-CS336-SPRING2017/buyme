@@ -1,3 +1,10 @@
+<!-- 
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+ -->
+
 <%@ page import="main.Database"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.ResultSet"%>

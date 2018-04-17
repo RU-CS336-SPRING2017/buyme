@@ -1,3 +1,10 @@
+<!-- 
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+ -->
+
 <%@ page import="main.Database"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.ResultSet"%>
@@ -123,22 +130,25 @@ if (category == null) {%>
 	
 	<h4>Fields</h4>
 	
-	<form action="/buyme/admin/AddSubategoryField" method="post">
 	<%if(request.getParameter("subcategoryFieldAddError") != null) { %>
-	Error adding field: <%=request.getParameter("subcategoryFieldAddError")%><br>
+	<p>Error adding field: <%=request.getParameter("subcategoryFieldAddError")%></p>
 	<%}%>
+	
+	<p>
+	<form action="/buyme/admin/AddSubategoryField" method="post">
 		Field: <input required type="text" name="field"> <br>
 		<input type="hidden" value="<%=category%>" name="category">
 		<input type="hidden" value="<%=subcategory%>" name="subcategory">
 		<input type="submit" value="Add field">
 	</form>
+	</p>
 	
 	<%
 	rs = con.createStatement().executeQuery("SELECT name FROM CategoryField WHERE category='" + category + "' AND subcategory='" + subcategory + "';");
 	%>
 	
 	<%if(request.getParameter("fieldRemoveError") != null) { %>
-	Error removing field: <%=request.getParameter("fieldRemoveError")%><br>
+	<p>Error removing field: <%=request.getParameter("fieldRemoveError")%></p>
 	<%}%>
 	
 	<ul>

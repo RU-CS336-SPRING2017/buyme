@@ -1,3 +1,10 @@
+<!-- 
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchonov
+// - Michael Parrilla
+ -->
+ 
 <ul>
 <li><a href="/buyme/">Home</a></li>
 

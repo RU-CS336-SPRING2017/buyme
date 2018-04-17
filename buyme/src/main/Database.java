@@ -1,3 +1,8 @@
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+
 package main;
 
 import java.math.BigDecimal;

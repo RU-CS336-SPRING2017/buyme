@@ -1,3 +1,8 @@
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+
 package servlets.admin;
 
 import java.io.IOException;
@@ -17,7 +22,6 @@ public class AddSubcategory extends HttpServlet {
        
     public AddSubcategory() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

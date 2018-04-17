@@ -1,3 +1,10 @@
+<!-- 
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+ -->
+
 <%@ page import="main.Database"%>
 <%@ page import="java.sql.Connection"%>
 <%@ page import="java.sql.ResultSet"%>
@@ -7,20 +14,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Customer Rep Accounts</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/includes/navbar.jsp"></jsp:include>
-<form action="/buyme/admin/CreateCustomerRep" method="post">
+<h1>Customer Rep Accounts</h1>
 <%if(request.getParameter("addError") != null) { %>
-Error creating customer rep: <%=request.getParameter("addError")%><br>
+<p>Error creating customer rep: <%=request.getParameter("addError")%></p>
 <%}%>
-	Username: <input required type="text" name="username"> <br>
-	Password: <input required type="password" name="password"> <br>
+<p>
+<form action="/buyme/admin/CreateCustomerRep" method="post">
+	Username: <input required type="text" name="username">
+	Password: <input required type="password" name="password">
 	<input type="submit" value="Create New Customer Rep">
 </form>
+</p>
 <%if(request.getParameter("removeError") != null) { %>
-Error removing customer rep: <%=request.getParameter("removeError")%><br>
+<p>Error removing customer rep: <%=request.getParameter("removeError")%></p>
 <%}%>
 <table>
 <tr>

@@ -1,3 +1,8 @@
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+
 package servlets.customerRep;
 
 import java.io.IOException;

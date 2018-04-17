@@ -1,3 +1,10 @@
+<!-- 
+// Authors:
+// - Ammaar Muhammad Iqbal
+// - Kostyantyn Kashchanov
+// - Michael Parrilla
+ -->
+
 <html>
 <head>
 <title>Login</title>
