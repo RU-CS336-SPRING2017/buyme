@@ -7,10 +7,10 @@ INSERT INTO Bid (amount,bidder,auction)
 VALUES (62.32,'User2',1001);
 
 INSERT INTO Auction (closeTime,initialPrice,bidIncrement,description,auctioneer,subcategory,category,title, minimumPrice,id)
-VALUES (TIMESTAMPADD(MINUTE,1,NOW()),55,7,'This is a dummy auction.','User1','Desktops','Computers','One Minute Desktop - Two Bids - $80 Minimum',80,1002);
+VALUES (TIMESTAMPADD(MINUTE,1,NOW()),55,7,'This is a dummy auction.','User2','Desktops','Computers','One Minute Desktop - Two Bids - $80 Minimum',80,1002);
 
 INSERT INTO Bid (amount,bidder,auction)
-VALUES (55,'User2',1002);
+VALUES (55,'User1',1002);
 
 INSERT INTO Bid (amount,bidder,auction)
 VALUES (81.3,'User3',1002);
