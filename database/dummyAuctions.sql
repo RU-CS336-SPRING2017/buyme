@@ -67,6 +67,7 @@ COMMIT;
 START TRANSACTION;
 INSERT INTO Auction (closeTime,initialPrice,bidIncrement,description,auctioneer,subcategory,category,title,id)
 VALUES (TIMESTAMPADD(WEEK,4,NOW()),10,4,'This is a dummy auction.','User2','Tablets','Computers','B Dummy Tablet 2 - Bubble Gum Tastes Good',2006);
+INSERT INTO AuctionField (auction,field,category,value)
 VALUES (2006,'Processor','Computers','1');
 INSERT INTO AuctionField (auction,field,category,value)
 VALUES (2006,'GPU','Computers','1');
@@ -88,8 +89,8 @@ VALUES (2007,'Memory','Computers','1');
 COMMIT;
 
 START TRANSACTION;
-INSERT INTO Auction (closeTime,initialPrice,bidIncrement,description,auctioneer,subcategory,category,title,2008)
-VALUES (TIMESTAMPADD(WEEK,6,NOW()),10,6,'This is a dummy auction.','User2','Desktops','Computers','C Dummy Desktop 3 - We Are Good');
+INSERT INTO Auction (closeTime,initialPrice,bidIncrement,description,auctioneer,subcategory,category,title,id)
+VALUES (TIMESTAMPADD(WEEK,6,NOW()),10,6,'This is a dummy auction.','User2','Desktops','Computers','C Dummy Desktop 3 - We Are Good',2008);
 INSERT INTO AuctionField (auction,field,category,value)
 VALUES (2008,'Processor','Computers','1');
 INSERT INTO AuctionField (auction,field,category,value)
@@ -103,6 +104,7 @@ COMMIT;
 START TRANSACTION;
 INSERT INTO Auction (closeTime,initialPrice,bidIncrement,description,auctioneer,subcategory,category,title,id)
 VALUES (TIMESTAMPADD(WEEK,9,NOW()),10,9,'This is a dummy auction.','User1','Tablets','Computers','E Dummy Tablet 3 - You Are Safe',2009);
+INSERT INTO AuctionField (auction,field,category,value)
 VALUES (2009,'Processor','Computers','1');
 INSERT INTO AuctionField (auction,field,category,value)
 VALUES (2009,'GPU','Computers','1');
